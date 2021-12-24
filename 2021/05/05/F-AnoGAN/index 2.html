@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mulkong.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+
+  <meta name="description" content="GAN을 사용한 최초 Anomaly Detection 방법인 AnoGAN의 후속 모델로 Encoder 모델을 사용하여 더 빠르게 $G(x)$와 $x$를 latent space안에 mapping 시켜 Anomaly Detection 하는 방법입니다. Paper 원문: f-AnoGAN: Fast unsupervised anomaly detection wit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[F-AnoGAN]Fast unsupervised anomaly detection with generative adversarial networks">
+<meta property="og:url" content="http://mulkong.github.io/2021/05/05/F-AnoGAN/index.html">
+<meta property="og:site_name" content="Mulkong DeepLearning">
+<meta property="og:description" content="GAN을 사용한 최초 Anomaly Detection 방법인 AnoGAN의 후속 모델로 Encoder 모델을 사용하여 더 빠르게 $G(x)$와 $x$를 latent space안에 mapping 시켜 Anomaly Detection 하는 방법입니다. Paper 원문: f-AnoGAN: Fast unsupervised anomaly detection wit">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0002/f-AnoGAN_figure1.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0002/f-AnoGAN_figure2.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0002/f-AnoGAN_figure3.png">
+<meta property="article:published_time" content="2021-05-05T06:09:09.000Z">
+<meta property="article:modified_time" content="2021-05-05T08:29:50.595Z">
+<meta property="article:author" content="mulkong">
+<meta property="article:tag" content="GAN">
+<meta property="article:tag" content="Anomaly Detection">
+<meta property="article:tag" content="Encoder">
+<meta property="article:tag" content="latent space mapping">
+<meta property="article:tag" content="Unsupervised Learning">
+<meta property="article:tag" content="paper review">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mulkong.github.io/images/post_images/post0002/f-AnoGAN_figure1.png">
+
+
+<link rel="canonical" href="http://mulkong.github.io/2021/05/05/F-AnoGAN/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ko'
+  };
+</script>
+
+  <title>[F-AnoGAN]Fast unsupervised anomaly detection with generative adversarial networks | Mulkong DeepLearning</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Mulkong DeepLearning</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">딥러닝 정리 블로그</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>홈</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>태그</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>카테고리</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>아카이브</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          목차
+        </li>
+        <li class="sidebar-nav-overview">
+          흝어보기
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%AC%B8%EC%A0%9C%EC%A0%90"><span class="nav-number">1.1.</span> <span class="nav-text">문제점</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%A7%80%EB%8F%84-%ED%95%99%EC%8A%B5-supervised-learning-%EC%9D%98-%EC%9E%A5%EB%8B%A8%EC%A0%90"><span class="nav-number">1.2.</span> <span class="nav-text">지도 학습(supervised learning)의 장단점</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%B9%84%EC%A7%80%EB%8F%84-%ED%95%99%EC%8A%B5-unsupervised-learning-%EC%9C%BC%EB%A1%9C-%EC%A0%91%EA%B7%BC%ED%95%9C-f-AnoGAn-%EC%A0%9C%EC%95%88"><span class="nav-number">1.3.</span> <span class="nav-text">비지도 학습(unsupervised learning)으로 접근한 f-AnoGAn 제안</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fast-mapping-technique-of-new-data"><span class="nav-number">1.4.</span> <span class="nav-text">Fast mapping technique of new data</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fast-GAN-based-anomaly-detection"><span class="nav-number">2.</span> <span class="nav-text">Fast GAN-based anomaly detection</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AnoGAN"><span class="nav-number">2.1.</span> <span class="nav-text">AnoGAN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#F-AnoGAN"><span class="nav-number">2.2.</span> <span class="nav-text">F-AnoGAN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Latent-space-mapping"><span class="nav-number">2.3.</span> <span class="nav-text">Latent space mapping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%8E%AE-Training-the-encoder-with-generated-images-ziz-architecture"><span class="nav-number">2.3.1.</span> <span class="nav-text">⎮ Training the encoder with generated images: $ziz$ architecture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%8E%AE-Training-the-encoder-with-real-images-izi-architecture"><span class="nav-number">2.3.2.</span> <span class="nav-text">⎮ Training the encoder with real images: $izi$ architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#izi-architecture%EC%9D%98-%EB%8B%A8%EC%A0%90"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">$izi$ architecture의 단점</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%8E%AE-Discriminator-guided-izi-encoder-training-izif-architecture"><span class="nav-number">2.3.3.</span> <span class="nav-text">⎮ Discriminator guided $izi$ encoder training: $izif$ architecture</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Detection-of-anomalies"><span class="nav-number">2.4.</span> <span class="nav-text">Detection of anomalies</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">mulkong</p>
+  <div class="site-description" itemprop="description">공부한 내용을 바탕으로 정리한 기술블로그 입니다.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">포스트</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">카테고리</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">태그</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/05/05/F-AnoGAN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="mulkong">
+      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mulkong DeepLearning">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [F-AnoGAN]Fast unsupervised anomaly detection with generative adversarial networks
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">작성일</span>
+      
+
+      <time title="Post created: 2021-05-05 15:09:09 / Updated at: 17:29:50" itemprop="dateCreated datePublished" datetime="2021-05-05T15:09:09+09:00">2021-05-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <hr>
+<ul>
+<li>GAN을 사용한 최초 Anomaly Detection 방법인 AnoGAN의 후속 모델로 Encoder 모델을 사용하여 더 빠르게 $G(x)$와 $x$를 latent space안에 mapping 시켜 Anomaly Detection 하는 방법입니다.</li>
+<li>Paper 원문: f-AnoGAN: <a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S1361841518302640">Fast unsupervised anomaly detection with generative adversarial networks</a></li>
+<li>f-AnoGAN tutorial code(Pytorch): <a target="_blank" rel="noopener" href="https://github.com/mulkong/f-AnoGAN_with_Pytorch">Tutorial Link</a></li>
+</ul>
+<hr>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><h2 id="문제점"><a href="#문제점" class="headerlink" title="문제점"></a>문제점</h2><p>정확한 annotation은 시간이 많이 들기 때문에 전문가(방사선사, 의사 등)가 clinical imaging(임상 영상)을 직접 annotation을 표시한 데이터를 얻는 것은 어렵다. 또한 모든 병변에 대해 annotation이 표시되지 않을 수 있으며 annotation에 대해서 정확하게 이 병변이 어떤 병변인지 설명 되어있지 않은 경우도 있습니다.</p>
+<h2 id="지도-학습-supervised-learning-의-장단점"><a href="#지도-학습-supervised-learning-의-장단점" class="headerlink" title="지도 학습(supervised learning)의 장단점"></a>지도 학습(supervised learning)의 장단점</h2><p>전문가로부터 분류된 training data를 받아 Supervised Learning 방식으로 모델을 학습 시키면 좋은 성능을 얻는 반면, annotation이 표시된 병변으로만 제한이 되는게 단점이다.</p>
+<h2 id="비지도-학습-unsupervised-learning-으로-접근한-f-AnoGAn-제안"><a href="#비지도-학습-unsupervised-learning-으로-접근한-f-AnoGAn-제안" class="headerlink" title="비지도 학습(unsupervised learning)으로 접근한 f-AnoGAn 제안"></a>비지도 학습(unsupervised learning)으로 접근한 f-AnoGAn 제안</h2><p>본 논문에서는 biomarker candidates를 할 수 있는 anomalous images 및 image segments를 식별할 수 있는 GAN 기반 Unsupervised Learning 접근법으로 해결하는 f-AnoGAN(fast AnoGAN)을 제안한다.</p>
+<h2 id="Fast-mapping-technique-of-new-data"><a href="#Fast-mapping-technique-of-new-data" class="headerlink" title="Fast mapping technique of new data"></a>Fast mapping technique of new data</h2><p>Normal data로 Generator model을 학습 시키고 GAN latent space에서 query data $X$(병변 유무를 확인하고 싶은 테스트 영상)의 fast mapping technique를 제안하고 평가한다. latent space mapping 방법은 Encoder를 기반으로 이루어지며 Discriminator feature residual error 및 image reconstruction error $G(z)$를 포함하는 훈련된 모델을 기반으로 anomaly detection이 진행된다.</p>
+<p>Optical Coherence Tomography(OCT) 촬영 데이터를 사용한 딥러닝 학습 관련 실험은 본 논문에서 제안한 방법과 대체 접근법(AnoGAN, BiGAN 등)과 비교하며 실험한다. 본 논문에서 제안한 f-AnoGAN 방법이 anomaly detection의 정확도를 높인다는 포괄적인 경험적 증거를 제공한다. 또한 두 명의 망막 전문가를 대상으로 한 시각적 테스트 결과 생성된 이미지 $G(z)$가 실제 OCT 이미지와 구별이 잘 안되는 것으로 나타났다.</p>
+<p><img src="/images/post_images/post0002/f-AnoGAN_figure1.png" alt="그림1"></p>
+<center><figcaption> (그림 1) </figcaption></center>
+
+
+<h1 id="Fast-GAN-based-anomaly-detection"><a href="#Fast-GAN-based-anomaly-detection" class="headerlink" title="Fast GAN-based anomaly detection"></a>Fast GAN-based anomaly detection</h1><p>본 논문에서 제안한 Anomaly Detection 순서는 크게 두가지로 이루어 집니다.</p>
+<ul>
+<li>normal image만 이용해서 GAN 학습</li>
+<li>normal image을 잘 생성할 수 있는 GAN을 기반으로 GAN 학습할 때 사용한 데이터와 동일한 데이터로 Encoder 학습 </li>
+</ul>
+<p>f-AnoGAN의 핵심은 <code>image를 latent space mapping하는 방법으로 Encoder 모델을 사용한 것</code>이 핵심입니다. 비슷한 방법인 AnoGAN과 비교를 해보면 확실한 차이점을 확인할 수 있습니다.</p>
+<h2 id="AnoGAN"><a href="#AnoGAN" class="headerlink" title="AnoGAN"></a>AnoGAN</h2><p><a href="https://mulkong.github.io/2020/10/04/Unsupervised-Anomaly-Detection-With-GAN/">🔗 AnoGAN 정리</a></p>
+<p>AnoGAN의 목표는 query image XX가 주어지면 query image $X$와 가장 유사하고 Manifold $X$에 위치하는 $G(z)$의 latent space를 찾는 것 입니다. 이 과정에서 $G(z)$의 Probability density function에 의존하게 됩니다.</p>
+<p>mapping된 latent space의 세부적인 과정은 다음과 같습니다.</p>
+<ul>
+<li>random하게 $z_n$을 뽑아 $G(z_n)$을 얻는다.</li>
+<li>query image $X$와 유사한 $G(z)$을 찾기 위해 latent space안에서 최적의 $z$을 찾기 위해 residual loss + discriminator loss을 기반으로 backpropagation을 통해 찾는다. (OCT 기분 500 iteration)</li>
+<li>최종적으로 residual loss 수식을 그대로 사용하여 anomaly score을 계산한다.<blockquote>
+<p>anomaly score 구하는 방법은 f-AnoGAN에서도 동일하게 적용 됩니다.</p>
+</blockquote>
+</li>
+</ul>
+<p>위에서 설명드린 방법은 학습 이미지 크기가 작으면 효율적이고 나름 빠르게 진행이 되지만 이미지 크기가 크면 클수록 그만큼 많은 정보들을 고려해야 하므로 random하게 iteration하며 학습하는 AnoGAN 방법은 mapping이 제대로 안되는 경우가 발생할 수 있습니다.</p>
+<h2 id="F-AnoGAN"><a href="#F-AnoGAN" class="headerlink" title="F-AnoGAN"></a>F-AnoGAN</h2><p>f-AnoGAN은 이런 문제를 해결하고자 AutoEncoder에서 아이디어를 얻었다고 할 수 있습니다. AutoEncoder는 입력된 정보들을 잘 설명할 수 있는 latent vector로 차원을 압축 시켰다가 Decoder를 통해 복원하는 간단한 모델입니다. 이 과정에서 사용된 Encoder 모델을 f-AnoGAN에서는 image를 latent space에 mapping하는 모델로 사용된 것 입니다. 이렇게 학습 데이터를 <code>latent space에 mapping 시켜주는 과정은 identity transformation(항등변환)</code> 해주는 과정이라고 할 수 있으며 입력 이미지가 들어가면 그대로 Decoder를 통해 동일한 이미지로 복원하는 identity mapping이라고도 할 수 있습니다.</p>
+<h2 id="Latent-space-mapping"><a href="#Latent-space-mapping" class="headerlink" title="Latent space mapping"></a>Latent space mapping</h2><p>GAN 학습은 latent space $Z$ $\rightarrow$ Manifold $X$로 mapping되는 $G(z) = z \rightarrow x$을 생성하지만 Anomaly Detection에서 필요한 $X \rightarrow$ $Z$로 inverse mapping은 불가능 합니다. (이 개념은 AnoGAN 논문에서도 언급된 개념입니다.)</p>
+<p>inverse mapping이 안되는 문제점을 해결하고자 AnoGAN에서는 위에서 언급한 방법으로 latent space에 mapping을 해주었지만 f-AnoGAN에서는 Deep Encoder Network를 사용하여 $E(x) = x \rightarrow z$ 즉, inverse mapping이 가능하도록 학습을 진행합니다. 이 방법을 사용하여 f-AnoGAN제안한 방법은 크게 2가지 방법입니다.</p>
+<ul>
+<li>$z \rightarrow image \rightarrow z$</li>
+<li>$image \rightarrow z \rightarrow image$</li>
+</ul>
+<p>이 두가지 방법 모두 (그림 2)처럼 image에서 latent space ZZ로 mapping 하는 방법입니다.</p>
+<p><img src="/images/post_images/post0002/f-AnoGAN_figure2.png"></p>
+<center><figcaption> (그림 2) </figcaption></center>
+
+<h3 id="⎮-Training-the-encoder-with-generated-images-ziz-architecture"><a href="#⎮-Training-the-encoder-with-generated-images-ziz-architecture" class="headerlink" title="⎮ Training the encoder with generated images: $ziz$ architecture"></a>⎮ Training the encoder with generated images: $ziz$ architecture</h3><p>학습중 latent space $Z$로 부터 random sampling된 latent vector $z$는 더이상 weight가 update 안되는 fixed weight $G$를 통해 image space에 mapping 되고 Encoder는 이를 다시 latent space $Z$에 mapping 하도록 학습 합니다. 따라서 $ziz$ architecture의 경우 GAN 학습할 때 사용했던 normal image가 필요 없습니다.</p>
+<p>$ziz$ architecture로 학습할 때 사용되는 loss는 $z$와 $E(G(z))$의 MSE를 최소화 하는 방법으로 학습이 진행됩니다.</p>
+<p>$$ L_{ziz}(z) = \cfrac{1}{d}||z - E(G(z))||^{2} $$</p>
+<p>$ziz$ architecture 방법은 학습할 때 생성된 이미지만 잘 mapping될 뿐 query image $X$가 들어오면 제대로 mapping을 못하게 된다는 단점이 있어 f-AnoGAN 논문에서는 해당 방법으로 학습을 진행 안합니다..</p>
+<h3 id="⎮-Training-the-encoder-with-real-images-izi-architecture"><a href="#⎮-Training-the-encoder-with-real-images-izi-architecture" class="headerlink" title="⎮ Training the encoder with real images: $izi$ architecture"></a>⎮ Training the encoder with real images: $izi$ architecture</h3><p>학습하는 동안 real image에서 latent space $Z$로 encoding되어 mapping하는 과정은 Encoder model로 이루어 집니다. 이런 과정을 통해서 query image $X$가 들어오면 AnoGAN에서 사용한 iteration을 시켜주는 방법 없이 빠르게 $X$와 구조적으로 일치한 $G(E(x))$를 생성할 수 있게 됩니다.</p>
+<p>$izi$ architecture로 학습할 때 사용되는 Losss는 $x$와 $E(G(x))$의 MSE를 최소화 하는 방법으로 학습이 진행됩니다.</p>
+<p>$$ L_{izi}(x) = \cfrac{1}{n}||x - G(E(x))||^{2} $$</p>
+<p>$izi$ architecture는 GAN을 학습할 때 사용한 학습 데이터를 이용해서 학습이 진행 됩니다.</p>
+<h4 id="izi-architecture의-단점"><a href="#izi-architecture의-단점" class="headerlink" title="$izi$ architecture의 단점"></a>$izi$ architecture의 단점</h4><p>$X$가 latent space $Z$에서 정확하게 어디에 위치하는지 $ziz$ architecture는 $G(z)$를 바로 latent space에 mapping 시켜서 알 수 있었지만 $izi$ architecture는 알 수 없습니다. 따라서 image space로 다시 mapping 하고 image−to−image residual loss를 계산하여 image−to−$z$ mapping의 정확도를 간접적으로 측정할 수 밖에 없습니다.</p>
+<p>이런 방법으로 진행하면 query image로 normal image가 들어오면 괜찮지만 abnormal image가 들어오면 residual 이 적은 이미지가 생성될 수 있습니다. 따라서 이런 문제점으로 본 논문에서는 feature space를 loss로 사용해서 mapping이 이루어질 수 있도록 $izif$ architecture를 고안하게 되었습니다.</p>
+<h3 id="⎮-Discriminator-guided-izi-encoder-training-izif-architecture"><a href="#⎮-Discriminator-guided-izi-encoder-training-izif-architecture" class="headerlink" title="⎮ Discriminator guided $izi$ encoder training: $izif$ architecture"></a>⎮ Discriminator guided $izi$ encoder training: $izif$ architecture</h3><p>$izi$ architecture 문제점을 해결하기 위해 Discriminator model의 중간 계층인 feature space에서 residual loss를 추가적으로 사용하여 Encoder model을 학습합니다</p>
+<p>$$ L_{izif}(x) = \cfrac{1}{n}\cdot||x - G(E(X))||^{2} + \cfrac{k}{n_d}\cdot||f(x) - f(G(E(x)))||^{2}  $$</p>
+<blockquote>
+<p>nd: 중간 계층의 feature space의 dimension<br>k: weight factor</p>
+</blockquote>
+<p>수식을 보면 Discriminator feature space는 AnoGAN에서 사용된 loss와 관련이 있는것을 볼 수 있습니다. Discriminator feature는 GAN을 학습할 때 얻은 parameter들을 사용한 것 입니다. feature space를 loss로 사용하게 되면 image space와 latent space에서 잘 mapping이 되도록 약간의 guide를 제공해주는 역할을 하게 됩니다.</p>
+<h2 id="Detection-of-anomalies"><a href="#Detection-of-anomalies" class="headerlink" title="Detection of anomalies"></a>Detection of anomalies</h2><p>GAN도 학습이 잘 되었고 Encoder도 학습이 잘 되었다면 이제 query image $X$를 입력으로 넣어서 anomaly score를 계산하면 됩니다. anomaly score를 계산하는 것은 image level의 anomaly detection중 query image와 reconstruction image의 deviation을 score로 나타내야 합니다.</p>
+<p>이 score를 anomaly score라고 하며 수식은 아래와 같습니다.</p>
+<p><img src="/images/post_images/post0002/f-AnoGAN_figure3.png" alt="그림1"></p>
+<center><figcaption> (그림 3) </figcaption></center>
+
+<p>수식을 보면 $loss_{izif}$ 수식과 동일한 것을 볼 수 있습니다.</p>
+<p>일반적으로 수식 모두 abnormal image에서 높은 anomaly score, normal image는 낮은 anomaly score가 계산됩니다. 모델은 normal image에 대해서만 학습하므로 입력 이미지와 시각적으로 유사한 이미지만 normal image의 Manifold $X$에 눞혀서 Encoder를 통해 재구성 됩니다.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/GAN/" rel="tag"># GAN</a>
+              <a href="/tags/Anomaly-Detection/" rel="tag"># Anomaly Detection</a>
+              <a href="/tags/Encoder/" rel="tag"># Encoder</a>
+              <a href="/tags/latent-space-mapping/" rel="tag"># latent space mapping</a>
+              <a href="/tags/Unsupervised-Learning/" rel="tag"># Unsupervised Learning</a>
+              <a href="/tags/paper-review/" rel="tag"># paper review</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/10/04/Unsupervised-Anomaly-Detection-With-GAN/" rel="prev" title="[AnoGAN]Unsupervised Anomaly Detection with GAN">
+                  <i class="fa fa-chevron-left"></i> [AnoGAN]Unsupervised Anomaly Detection with GAN
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/12/24/%5BAnomaly%20Detection%5D%20Improved%20anomaly%20detection%20by%20training%20an%20autoencoder%20with%20skip%20connections%20on%20images%20corrupted%20with%20stain%20shaped%20noise/" rel="next" title="[Anomaly Detection] Improved anomaly detection by training an autoencoder with skip connections on images corrupted with Stain-shaped noise">
+                  [Anomaly Detection] Improved anomaly detection by training an autoencoder with skip connections on images corrupted with Stain-shaped noise <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mulkong</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
