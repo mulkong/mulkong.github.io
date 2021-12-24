@@ -22,32 +22,45 @@
     var CONFIG = {"hostname":"mulkong.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Mulkong DeepLearning">
-<meta property="og:url" content="http://mulkong.github.io/index.html">
+  <meta name="description" content="이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 Tistory에서 보실 수 있습니다. Paper 원문: Improved anomaly detection by training an autoencoder with skip connections on images corrupted wit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Anomaly Detection] Improved anomaly detection by training an autoencoder with skip connections on images corrupted with Stain-shaped noise">
+<meta property="og:url" content="http://mulkong.github.io/2021/12/24/[Anomaly%20Detection]%20Improved%20anomaly%20detection%20by%20training%20an%20autoencoder%20with%20skip%20connections%20on%20images%20corrupted%20with%20stain%20shaped%20noise/index.html">
 <meta property="og:site_name" content="Mulkong DeepLearning">
-<meta property="og:description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+<meta property="og:description" content="이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 Tistory에서 보실 수 있습니다. Paper 원문: Improved anomaly detection by training an autoencoder with skip connections on images corrupted wit">
 <meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0003/figure_0001.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0003/figure_0002.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0003/figure_0003.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0003/figure_0004.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0003/figure_0005.png">
+<meta property="article:published_time" content="2021-12-24T11:00:00.000Z">
+<meta property="article:modified_time" content="2021-12-24T11:37:12.156Z">
 <meta property="article:author" content="mulkong">
-<meta property="article:tag" content="DeepLearning, AI, Pytorch, Python, MachineLearning, Programming">
+<meta property="article:tag" content="GAN">
+<meta property="article:tag" content="Unsupervised Learning">
+<meta property="article:tag" content="paper review">
+<meta property="article:tag" content="Image">
+<meta property="article:tag" content="Autoencoder">
+<meta property="article:tag" content="Uncertainty">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mulkong.github.io/images/post_images/post0003/figure_0001.png">
 
 
-<link rel="canonical" href="http://mulkong.github.io/">
+<link rel="canonical" href="http://mulkong.github.io/2021/12/24/[Anomaly%20Detection]%20Improved%20anomaly%20detection%20by%20training%20an%20autoencoder%20with%20skip%20connections%20on%20images%20corrupted%20with%20stain%20shaped%20noise/">
 
 
 <script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'ko'
   };
 </script>
 
-  <title>Mulkong DeepLearning</title>
+  <title>[Anomaly Detection] Improved anomaly detection by training an autoencoder with skip connections on images corrupted with Stain-shaped noise | Mulkong DeepLearning</title>
   
 
 
@@ -168,7 +181,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           목차
@@ -180,6 +193,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Abstract"><span class="nav-number">1.</span> <span class="nav-text">1.Abstract</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EC%82%B0%EC%97%85-%ED%98%84%EC%9E%A5%EC%97%90%EC%84%9C-AE%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-Anomaly-Detection"><span class="nav-number">1.0.1.</span> <span class="nav-text">산업 현장에서 AE를 활용한 Anomaly Detection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#skip-connections%EC%9D%B4-%EC%9E%88%EB%8A%94-AutoEncoder-AES-%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%9C-%EC%9D%B4%EC%9C%A0"><span class="nav-number">1.0.2.</span> <span class="nav-text">skip-connections이 있는 AutoEncoder(AES)를 사용한 이유</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AES-Stain-noise-model-%EC%A0%9C%EC%95%88"><span class="nav-number">1.0.3.</span> <span class="nav-text">AES + Stain noise model 제안</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EC%9A%B0%EB%A6%AC%EA%B0%80-%EC%82%AC%EC%9A%A9%ED%95%9C-%EB%AA%A8%EB%8D%B8-%EC%A7%B1%EC%A7%B1%F0%9F%91%8D-%E2%86%92-AES-Stain-model"><span class="nav-number">1.0.4.</span> <span class="nav-text">우리가 사용한 모델 짱짱👍 → AES+Stain model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EC%9A%B0%EB%A6%AC%EA%B0%80-%EA%B0%80%EB%9D%BC%EB%A1%9C-%EC%95%88%ED%96%88%EB%8B%A4%EB%8A%94%EA%B2%83%EC%9D%84-%EC%A6%9D%EB%AA%85%ED%95%98%EA%B8%B0-%EC%9C%84%ED%95%B4-%EC%9D%B4%EB%9F%B0-%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%85%8B%EC%9C%BC%EB%A1%9C-%EC%A7%84%ED%96%89%ED%96%88%EB%8B%A4"><span class="nav-number">1.0.5.</span> <span class="nav-text">우리가 가라로 안했다는것을 증명하기 위해 이런 데이터셋으로 진행했다</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Methods"><span class="nav-number">2.</span> <span class="nav-text">2.Methods</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Anomaly-Detection-%EA%B0%9C%EC%9A%94"><span class="nav-number">2.0.1.</span> <span class="nav-text">Anomaly Detection 개요</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Supervised-Learning%EC%9C%BC%EB%A1%9C-%ED%95%98%EB%8A%94-Anomaly-Detection%EC%9D%98-%EB%AC%B8%EC%A0%9C%EC%A0%90"><span class="nav-number">2.0.2.</span> <span class="nav-text">Supervised Learning으로 하는 Anomaly Detection의 문제점</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Training-Step"><span class="nav-number">3.</span> <span class="nav-text">3.Training Step</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Blue-box"><span class="nav-number">3.0.1.</span> <span class="nav-text">Blue box</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-AESc-vs-U-Net"><span class="nav-number">3.1.</span> <span class="nav-text">3-1. AESc vs U-Net</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Autoencoder"><span class="nav-number">3.1.1.</span> <span class="nav-text">Autoencoder</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Bottleneck-%EA%B5%AC%EC%A1%B0%EB%A5%BC-%EA%B0%96%EB%8A%94-AutoEncoder-%EA%B5%AC%EC%A1%B0%EC%9D%98-%EC%9E%A5%EB%8B%A8%EC%A0%90"><span class="nav-number">3.1.1.0.1.</span> <span class="nav-text">Bottleneck 구조를 갖는 AutoEncoder 구조의 장단점</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Bottleneck-%EA%B5%AC%EC%A1%B0%EB%A5%BC-%EA%B0%96%EB%8A%94-AutoEncoder%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%9C-%EC%9D%B4%EC%9C%A0"><span class="nav-number">3.1.1.0.2.</span> <span class="nav-text">Bottleneck 구조를 갖는 AutoEncoder를 사용한 이유</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Unet"><span class="nav-number">3.1.2.</span> <span class="nav-text">Unet</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#U-Net-%EA%B5%AC%EC%A1%B0%EC%9D%98-%ED%8A%B9%EC%A7%95%EA%B3%BC-%EC%9E%A5%EB%8B%A8%EC%A0%90"><span class="nav-number">3.1.2.0.1.</span> <span class="nav-text">U-Net 구조의 특징과 장단점</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bottleneck-%EA%B5%AC%EC%A1%B0%EB%A5%BC-%EA%B0%96%EB%8A%94-AutoEncoder%EC%97%90-Skip-connection%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%9C-%EC%9D%B4%EC%9C%A0"><span class="nav-number">3.1.3.</span> <span class="nav-text">Bottleneck 구조를 갖는 AutoEncoder에 Skip-connection을 사용한 이유</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GAN-%EB%A7%90%EA%B3%A0-AESc%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%9C-%EC%9D%B4%EC%9C%A0"><span class="nav-number">3.1.4.</span> <span class="nav-text">GAN 말고 AESc를 사용한 이유</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Test-Step"><span class="nav-number">4.</span> <span class="nav-text">4.Test Step</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Red-box"><span class="nav-number">4.0.1.</span> <span class="nav-text">Red box</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-Residual-based-Detection"><span class="nav-number">4.1.</span> <span class="nav-text">4-1. Residual-based Detection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Residual-baded-detection%EC%9D%98-%EB%8B%A8%EC%A0%90%EA%B3%BC-MCDropout-%EC%82%AC%EC%9A%A9-%EC%9D%B4%EC%9C%A0"><span class="nav-number">4.1.1.</span> <span class="nav-text">Residual-baded detection의 단점과 MCDropout 사용 이유</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-Uncertainty-based-Detection"><span class="nav-number">4.2.</span> <span class="nav-text">4-2. Uncertainty-based Detection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%85%8B-%EC%83%81%ED%99%A9%EC%97%90-%EB%94%B0%EB%A5%B8-Detection-%EB%B0%A9%EB%B2%95-%EC%84%A0%ED%83%9D"><span class="nav-number">4.2.1.</span> <span class="nav-text">데이터셋 상황에 따른 Detection 방법 선택</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Conclusion"><span class="nav-number">5.</span> <span class="nav-text">5.Conclusion</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -231,11 +245,12 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
       
 
       
-    
+
+  
 
 
 <div class="post-block">
@@ -255,10 +270,9 @@
       <meta itemprop="name" content="Mulkong DeepLearning">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/24/%5BAnomaly%20Detection%5D%20Improved%20anomaly%20detection%20by%20training%20an%20autoencoder%20with%20skip%20connections%20on%20images%20corrupted%20with%20stain%20shaped%20noise/" class="post-title-link" itemprop="url">[Anomaly Detection] Improved anomaly detection by training an autoencoder with skip connections on images corrupted with Stain-shaped noise</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          [Anomaly Detection] Improved anomaly detection by training an autoencoder with skip connections on images corrupted with Stain-shaped noise
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -291,7 +305,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <hr>
+        <hr>
 <ul>
 <li>이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 <a target="_blank" rel="noopener" href="https://sensibilityit.tistory.com/517">Tistory</a>에서 보실 수 있습니다.</li>
 <li>Paper 원문: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2008.12977">Improved anomaly detection by training an autoencoder with skip connections on images corrupted with Stain-shaped noise</a></li>
@@ -384,7 +398,6 @@
 <p>Reconstruction residual과 달리 Uncertainity Indicator는 결함과 그 주변 사이 환경의 대비와는 무관합니다. 따라서 주변 환경과 대비가 뚜렷하다면 Reconstruction residual 전략으로 가고 대비가 뚜렷한 대비가 없다는 Uncertainity 기반 전략으로 Anomaly Detection을 진행하면 됩니다.</p>
 <p>또한 Residual-based detection 전략에 비해 Uncertainty-based detection 전략은 Normal한 query image에서 false-positive rate를 증가키시게 되는 단점이 존재합니다.</p>
 
-      
     </div>
 
     
@@ -392,308 +405,32 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-tags">
+              <a href="/tags/GAN/" rel="tag"># GAN</a>
+              <a href="/tags/Unsupervised-Learning/" rel="tag"># Unsupervised Learning</a>
+              <a href="/tags/paper-review/" rel="tag"># paper review</a>
+              <a href="/tags/Image/" rel="tag"># Image</a>
+              <a href="/tags/Autoencoder/" rel="tag"># Autoencoder</a>
+              <a href="/tags/Uncertainty/" rel="tag"># Uncertainty</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/05/05/F-AnoGAN/" rel="prev" title="[F-AnoGAN]Fast unsupervised anomaly detection with generative adversarial networks">
+                  <i class="fa fa-chevron-left"></i> [F-AnoGAN]Fast unsupervised anomaly detection with generative adversarial networks
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
 
 
 
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
-    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/05/05/F-AnoGAN/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="mulkong">
-      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mulkong DeepLearning">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/05/F-AnoGAN/" class="post-title-link" itemprop="url">[F-AnoGAN]Fast unsupervised anomaly detection with generative adversarial networks</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">작성일</span>
-      
-
-      <time title="Post created: 2021-05-05 15:09:09 / Updated at: 17:29:50" itemprop="dateCreated datePublished" datetime="2021-05-05T15:09:09+09:00">2021-05-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <hr>
-<ul>
-<li>GAN을 사용한 최초 Anomaly Detection 방법인 AnoGAN의 후속 모델로 Encoder 모델을 사용하여 더 빠르게 $G(x)$와 $x$를 latent space안에 mapping 시켜 Anomaly Detection 하는 방법입니다.</li>
-<li>Paper 원문: f-AnoGAN: <a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S1361841518302640">Fast unsupervised anomaly detection with generative adversarial networks</a></li>
-<li>f-AnoGAN tutorial code(Pytorch): <a target="_blank" rel="noopener" href="https://github.com/mulkong/f-AnoGAN_with_Pytorch">Tutorial Link</a></li>
-</ul>
-<hr>
-<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><h2 id="문제점"><a href="#문제점" class="headerlink" title="문제점"></a>문제점</h2><p>정확한 annotation은 시간이 많이 들기 때문에 전문가(방사선사, 의사 등)가 clinical imaging(임상 영상)을 직접 annotation을 표시한 데이터를 얻는 것은 어렵다. 또한 모든 병변에 대해 annotation이 표시되지 않을 수 있으며 annotation에 대해서 정확하게 이 병변이 어떤 병변인지 설명 되어있지 않은 경우도 있습니다.</p>
-<h2 id="지도-학습-supervised-learning-의-장단점"><a href="#지도-학습-supervised-learning-의-장단점" class="headerlink" title="지도 학습(supervised learning)의 장단점"></a>지도 학습(supervised learning)의 장단점</h2><p>전문가로부터 분류된 training data를 받아 Supervised Learning 방식으로 모델을 학습 시키면 좋은 성능을 얻는 반면, annotation이 표시된 병변으로만 제한이 되는게 단점이다.</p>
-<h2 id="비지도-학습-unsupervised-learning-으로-접근한-f-AnoGAn-제안"><a href="#비지도-학습-unsupervised-learning-으로-접근한-f-AnoGAn-제안" class="headerlink" title="비지도 학습(unsupervised learning)으로 접근한 f-AnoGAn 제안"></a>비지도 학습(unsupervised learning)으로 접근한 f-AnoGAn 제안</h2><p>본 논문에서는 biomarker candidates를 할 수 있는 anomalous images 및 image segments를 식별할 수 있는 GAN 기반 Unsupervised Learning 접근법으로 해결하는 f-AnoGAN(fast AnoGAN)을 제안한다.</p>
-<h2 id="Fast-mapping-technique-of-new-data"><a href="#Fast-mapping-technique-of-new-data" class="headerlink" title="Fast mapping technique of new data"></a>Fast mapping technique of new data</h2><p>Normal data로 Generator model을 학습 시키고 GAN latent space에서 query data $X$(병변 유무를 확인하고 싶은 테스트 영상)의 fast mapping technique를 제안하고 평가한다. latent space mapping 방법은 Encoder를 기반으로 이루어지며 Discriminator feature residual error 및 image reconstruction error $G(z)$를 포함하는 훈련된 모델을 기반으로 anomaly detection이 진행된다.</p>
-<p>Optical Coherence Tomography(OCT) 촬영 데이터를 사용한 딥러닝 학습 관련 실험은 본 논문에서 제안한 방법과 대체 접근법(AnoGAN, BiGAN 등)과 비교하며 실험한다. 본 논문에서 제안한 f-AnoGAN 방법이 anomaly detection의 정확도를 높인다는 포괄적인 경험적 증거를 제공한다. 또한 두 명의 망막 전문가를 대상으로 한 시각적 테스트 결과 생성된 이미지 $G(z)$가 실제 OCT 이미지와 구별이 잘 안되는 것으로 나타났다.</p>
-<p><img src="/images/post_images/post0002/f-AnoGAN_figure1.png" alt="그림1"></p>
-<center><figcaption> (그림 1) </figcaption></center>
-
-
-<h1 id="Fast-GAN-based-anomaly-detection"><a href="#Fast-GAN-based-anomaly-detection" class="headerlink" title="Fast GAN-based anomaly detection"></a>Fast GAN-based anomaly detection</h1><p>본 논문에서 제안한 Anomaly Detection 순서는 크게 두가지로 이루어 집니다.</p>
-<ul>
-<li>normal image만 이용해서 GAN 학습</li>
-<li>normal image을 잘 생성할 수 있는 GAN을 기반으로 GAN 학습할 때 사용한 데이터와 동일한 데이터로 Encoder 학습 </li>
-</ul>
-<p>f-AnoGAN의 핵심은 <code>image를 latent space mapping하는 방법으로 Encoder 모델을 사용한 것</code>이 핵심입니다. 비슷한 방법인 AnoGAN과 비교를 해보면 확실한 차이점을 확인할 수 있습니다.</p>
-<h2 id="AnoGAN"><a href="#AnoGAN" class="headerlink" title="AnoGAN"></a>AnoGAN</h2><p><a href="https://mulkong.github.io/2020/10/04/Unsupervised-Anomaly-Detection-With-GAN/">🔗 AnoGAN 정리</a></p>
-<p>AnoGAN의 목표는 query image XX가 주어지면 query image $X$와 가장 유사하고 Manifold $X$에 위치하는 $G(z)$의 latent space를 찾는 것 입니다. 이 과정에서 $G(z)$의 Probability density function에 의존하게 됩니다.</p>
-<p>mapping된 latent space의 세부적인 과정은 다음과 같습니다.</p>
-<ul>
-<li>random하게 $z_n$을 뽑아 $G(z_n)$을 얻는다.</li>
-<li>query image $X$와 유사한 $G(z)$을 찾기 위해 latent space안에서 최적의 $z$을 찾기 위해 residual loss + discriminator loss을 기반으로 backpropagation을 통해 찾는다. (OCT 기분 500 iteration)</li>
-<li>최종적으로 residual loss 수식을 그대로 사용하여 anomaly score을 계산한다.<blockquote>
-<p>anomaly score 구하는 방법은 f-AnoGAN에서도 동일하게 적용 됩니다.</p>
-</blockquote>
-</li>
-</ul>
-<p>위에서 설명드린 방법은 학습 이미지 크기가 작으면 효율적이고 나름 빠르게 진행이 되지만 이미지 크기가 크면 클수록 그만큼 많은 정보들을 고려해야 하므로 random하게 iteration하며 학습하는 AnoGAN 방법은 mapping이 제대로 안되는 경우가 발생할 수 있습니다.</p>
-<h2 id="F-AnoGAN"><a href="#F-AnoGAN" class="headerlink" title="F-AnoGAN"></a>F-AnoGAN</h2><p>f-AnoGAN은 이런 문제를 해결하고자 AutoEncoder에서 아이디어를 얻었다고 할 수 있습니다. AutoEncoder는 입력된 정보들을 잘 설명할 수 있는 latent vector로 차원을 압축 시켰다가 Decoder를 통해 복원하는 간단한 모델입니다. 이 과정에서 사용된 Encoder 모델을 f-AnoGAN에서는 image를 latent space에 mapping하는 모델로 사용된 것 입니다. 이렇게 학습 데이터를 <code>latent space에 mapping 시켜주는 과정은 identity transformation(항등변환)</code> 해주는 과정이라고 할 수 있으며 입력 이미지가 들어가면 그대로 Decoder를 통해 동일한 이미지로 복원하는 identity mapping이라고도 할 수 있습니다.</p>
-<h2 id="Latent-space-mapping"><a href="#Latent-space-mapping" class="headerlink" title="Latent space mapping"></a>Latent space mapping</h2><p>GAN 학습은 latent space $Z$ $\rightarrow$ Manifold $X$로 mapping되는 $G(z) = z \rightarrow x$을 생성하지만 Anomaly Detection에서 필요한 $X \rightarrow$ $Z$로 inverse mapping은 불가능 합니다. (이 개념은 AnoGAN 논문에서도 언급된 개념입니다.)</p>
-<p>inverse mapping이 안되는 문제점을 해결하고자 AnoGAN에서는 위에서 언급한 방법으로 latent space에 mapping을 해주었지만 f-AnoGAN에서는 Deep Encoder Network를 사용하여 $E(x) = x \rightarrow z$ 즉, inverse mapping이 가능하도록 학습을 진행합니다. 이 방법을 사용하여 f-AnoGAN제안한 방법은 크게 2가지 방법입니다.</p>
-<ul>
-<li>$z \rightarrow image \rightarrow z$</li>
-<li>$image \rightarrow z \rightarrow image$</li>
-</ul>
-<p>이 두가지 방법 모두 (그림 2)처럼 image에서 latent space ZZ로 mapping 하는 방법입니다.</p>
-<p><img src="/images/post_images/post0002/f-AnoGAN_figure2.png"></p>
-<center><figcaption> (그림 2) </figcaption></center>
-
-<h3 id="⎮-Training-the-encoder-with-generated-images-ziz-architecture"><a href="#⎮-Training-the-encoder-with-generated-images-ziz-architecture" class="headerlink" title="⎮ Training the encoder with generated images: $ziz$ architecture"></a>⎮ Training the encoder with generated images: $ziz$ architecture</h3><p>학습중 latent space $Z$로 부터 random sampling된 latent vector $z$는 더이상 weight가 update 안되는 fixed weight $G$를 통해 image space에 mapping 되고 Encoder는 이를 다시 latent space $Z$에 mapping 하도록 학습 합니다. 따라서 $ziz$ architecture의 경우 GAN 학습할 때 사용했던 normal image가 필요 없습니다.</p>
-<p>$ziz$ architecture로 학습할 때 사용되는 loss는 $z$와 $E(G(z))$의 MSE를 최소화 하는 방법으로 학습이 진행됩니다.</p>
-<p>$$ L_{ziz}(z) = \cfrac{1}{d}||z - E(G(z))||^{2} $$</p>
-<p>$ziz$ architecture 방법은 학습할 때 생성된 이미지만 잘 mapping될 뿐 query image $X$가 들어오면 제대로 mapping을 못하게 된다는 단점이 있어 f-AnoGAN 논문에서는 해당 방법으로 학습을 진행 안합니다..</p>
-<h3 id="⎮-Training-the-encoder-with-real-images-izi-architecture"><a href="#⎮-Training-the-encoder-with-real-images-izi-architecture" class="headerlink" title="⎮ Training the encoder with real images: $izi$ architecture"></a>⎮ Training the encoder with real images: $izi$ architecture</h3><p>학습하는 동안 real image에서 latent space $Z$로 encoding되어 mapping하는 과정은 Encoder model로 이루어 집니다. 이런 과정을 통해서 query image $X$가 들어오면 AnoGAN에서 사용한 iteration을 시켜주는 방법 없이 빠르게 $X$와 구조적으로 일치한 $G(E(x))$를 생성할 수 있게 됩니다.</p>
-<p>$izi$ architecture로 학습할 때 사용되는 Losss는 $x$와 $E(G(x))$의 MSE를 최소화 하는 방법으로 학습이 진행됩니다.</p>
-<p>$$ L_{izi}(x) = \cfrac{1}{n}||x - G(E(x))||^{2} $$</p>
-<p>$izi$ architecture는 GAN을 학습할 때 사용한 학습 데이터를 이용해서 학습이 진행 됩니다.</p>
-<h4 id="izi-architecture의-단점"><a href="#izi-architecture의-단점" class="headerlink" title="$izi$ architecture의 단점"></a>$izi$ architecture의 단점</h4><p>$X$가 latent space $Z$에서 정확하게 어디에 위치하는지 $ziz$ architecture는 $G(z)$를 바로 latent space에 mapping 시켜서 알 수 있었지만 $izi$ architecture는 알 수 없습니다. 따라서 image space로 다시 mapping 하고 image−to−image residual loss를 계산하여 image−to−$z$ mapping의 정확도를 간접적으로 측정할 수 밖에 없습니다.</p>
-<p>이런 방법으로 진행하면 query image로 normal image가 들어오면 괜찮지만 abnormal image가 들어오면 residual 이 적은 이미지가 생성될 수 있습니다. 따라서 이런 문제점으로 본 논문에서는 feature space를 loss로 사용해서 mapping이 이루어질 수 있도록 $izif$ architecture를 고안하게 되었습니다.</p>
-<h3 id="⎮-Discriminator-guided-izi-encoder-training-izif-architecture"><a href="#⎮-Discriminator-guided-izi-encoder-training-izif-architecture" class="headerlink" title="⎮ Discriminator guided $izi$ encoder training: $izif$ architecture"></a>⎮ Discriminator guided $izi$ encoder training: $izif$ architecture</h3><p>$izi$ architecture 문제점을 해결하기 위해 Discriminator model의 중간 계층인 feature space에서 residual loss를 추가적으로 사용하여 Encoder model을 학습합니다</p>
-<p>$$ L_{izif}(x) = \cfrac{1}{n}\cdot||x - G(E(X))||^{2} + \cfrac{k}{n_d}\cdot||f(x) - f(G(E(x)))||^{2}  $$</p>
-<blockquote>
-<p>nd: 중간 계층의 feature space의 dimension<br>k: weight factor</p>
-</blockquote>
-<p>수식을 보면 Discriminator feature space는 AnoGAN에서 사용된 loss와 관련이 있는것을 볼 수 있습니다. Discriminator feature는 GAN을 학습할 때 얻은 parameter들을 사용한 것 입니다. feature space를 loss로 사용하게 되면 image space와 latent space에서 잘 mapping이 되도록 약간의 guide를 제공해주는 역할을 하게 됩니다.</p>
-<h2 id="Detection-of-anomalies"><a href="#Detection-of-anomalies" class="headerlink" title="Detection of anomalies"></a>Detection of anomalies</h2><p>GAN도 학습이 잘 되었고 Encoder도 학습이 잘 되었다면 이제 query image $X$를 입력으로 넣어서 anomaly score를 계산하면 됩니다. anomaly score를 계산하는 것은 image level의 anomaly detection중 query image와 reconstruction image의 deviation을 score로 나타내야 합니다.</p>
-<p>이 score를 anomaly score라고 하며 수식은 아래와 같습니다.</p>
-<p><img src="/images/post_images/post0002/f-AnoGAN_figure3.png" alt="그림1"></p>
-<center><figcaption> (그림 3) </figcaption></center>
-
-<p>수식을 보면 $loss_{izif}$ 수식과 동일한 것을 볼 수 있습니다.</p>
-<p>일반적으로 수식 모두 abnormal image에서 높은 anomaly score, normal image는 낮은 anomaly score가 계산됩니다. 모델은 normal image에 대해서만 학습하므로 입력 이미지와 시각적으로 유사한 이미지만 normal image의 Manifold $X$에 눞혀서 Encoder를 통해 재구성 됩니다.</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
-    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2020/10/04/Unsupervised-Anomaly-Detection-With-GAN/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="mulkong">
-      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mulkong DeepLearning">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/04/Unsupervised-Anomaly-Detection-With-GAN/" class="post-title-link" itemprop="url">[AnoGAN]Unsupervised Anomaly Detection with GAN</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">작성일</span>
-
-      <time title="Post created: 2020-10-04 19:01:01" itemprop="dateCreated datePublished" datetime="2020-10-04T19:01:01+09:00">2020-10-04</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Updated at: 2021-05-05 14:59:10" itemprop="dateModified" datetime="2021-05-05T14:59:10+09:00">2021-05-05</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <hr>
-<ul>
-<li>이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 <a target="_blank" rel="noopener" href="https://sensibilityit.tistory.com/506?category=731657">AnoGAN 정리글_Tistory</a>에서 보실 수 있습니다.</li>
-<li>기존 Anomaly Detection은 Supervised Learning으로 접근했지만 AnoGAN은 GAN을 이용한 Unsupervised Learning 방법으로 접근하여 Anomaly Detection하는 논문입니다.</li>
-<li>Paper 원문: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1703.05921">Unsupervised Anomaly Detection with Generative Adversarial Networks to Guide Marker Discovery</a></li>
-</ul>
-<hr>
-<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h2 id="GAN이란"><a href="#GAN이란" class="headerlink" title="GAN이란?"></a>GAN이란?</h2><p>GAN 학습 과정은 Discriminator가 Real/Fake를 잘 맞추도록 학습한 후 Generator가 생성한 Fake image가 Discriminator를 속여 Real이라고 말하게끔 하도록 하는 학습 과정입니다.</p>
-<h2 id="DCGAN"><a href="#DCGAN" class="headerlink" title="DCGAN"></a>DCGAN</h2><h3 id="⎮-CNN-vs-MLP"><a href="#⎮-CNN-vs-MLP" class="headerlink" title="⎮ CNN vs MLP"></a>⎮ CNN vs MLP</h3><ul>
-<li><p>MLP(Multi-Layer Perceptron)</p>
-<ul>
-<li>특징: 3차원 데이터를 1개의 Vector로 풀어서 인식합니다. </li>
-<li>단점: 이미지 위치 정보를 무시하게 됩니다. (Feature loss 발생)</li>
-</ul>
-</li>
-<li><p>CNN(Convolutional Nerual Network)</p>
-<ul>
-<li>특징: 3차원 데이터 입력을 그대로 사용해 위치 정보가 반영됩니다.</li>
-</ul>
-</li>
-</ul>
-<h3 id="⎮-Discriminator"><a href="#⎮-Discriminator" class="headerlink" title="⎮ Discriminator"></a>⎮ Discriminator</h3><p>Convolution 연산을 통해 데이터의 차원을 줄이는 과정입니다. 어떻게 보면 Encoder의 모델 구조와 비슷하다고 볼 수 있습니다.</p>
-<h3 id="⎮-Generator"><a href="#⎮-Generator" class="headerlink" title="⎮ Generator"></a>⎮ Generator</h3><p>Generator는 Latent Space를 입력으로 넣어주면 차원을 확장 시키는 방법으로 모델 구조를 구성합니다. 이때 사용하는 함수는 Pytorch 기준 nn.ConvTranspose2d를 사용합니다. 즉, Deconvolution 방식으로 모델이 구성됩니다.</p>
-<h3 id="⎮-DCGAN-특징"><a href="#⎮-DCGAN-특징" class="headerlink" title="⎮ DCGAN 특징"></a>⎮ DCGAN 특징</h3><ol>
-<li><p><strong>Generator는 이미지를 외워서 보여주는 것이 아니다. (Memorization이 안일어난다.)</strong><br> Paper를 읽어보면 “walking in the latent space”라는 문구가 나옵니다. 만약 G가 Memorization이 발생된다면 latent vector를 조금씩 바꿀 때 이미지가 변형되 못할 것 입니다.</p>
-</li>
-<li><p><strong>Memorization이 일어난 경우는 어떤 경우인가?</strong><br> Generator가 유의미한 특징들을 학습하지 않고 overfitting이 발생되 데이터와 1:1 mapping이 발생하는 Identity Mapping 학습이 이루어지게 됩니다.</p>
-</li>
-<li><p><strong>walking in the latent space</strong><br> latept space 내부에서 vector값을 조금씩 변경하면 부드럽게 이미지들이 변화되는것을 확인할 수 있는 그림 입니다.</p>
-</li>
-</ol>
-<p><img src="/images/post_images/walking_latent_space_DCGAN.jpg"></p>
-<h1 id="AnoGAN"><a href="#AnoGAN" class="headerlink" title="AnoGAN"></a>AnoGAN</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>의료데이터에서 disease progression과 treatment monitoring에 이미지를 검출하는 model을 구하는 것은 어려운 일이다. 기존 모델은 automating detection을 위해 annotation이 이루어진 많은 양의 데이터를 기반으로 Supervised Learning 방식으로 진행했다. Supervised Learning은 annotation과 이미 알려진 것들에 대해서만 detection이 이루어 지는 단점이 존재하다. 그래서 이 논문은 Unsupervised Learning 방식으로 학습을 진행한 후 Anomaly Detection 과정이 이루어진다. 이 논문에서 제안한 <strong>AnoGAN</strong>은 다양한 Normal Data로 학습한 DCGAN과 Image space 안에서 latent space의 mapping을 기반으로 Anomaly score를 계산한다. 새로운 데이터가 들어오게 되면 model은 anomaly한 부분에 labeling하게 되고 Normal image로 학습된 distribution에 적합한지 image patches에 anomaly score를 나타낸다. 이 방식은 망막의 광학 단층 촬영 영상에 적용한 결과 망막 유체 또는 반사성 초점을 포함하는 이미지와 같은 Abnormal image을 정확하게 식별함을 확인했다.</p>
-<h2 id="AnoGAN이-등장한-계기"><a href="#AnoGAN이-등장한-계기" class="headerlink" title="AnoGAN이 등장한 계기"></a>AnoGAN이 등장한 계기</h2><p>이 논문에서 사용된 데이터는 의료 데이터 입니다. 의료현장, 산업현장 모두 공통적으로 Normal 데이터는 많지만 Abnormal 데이터는 부족한 경우가 많습니다. 지금까지 Anomaly Detection을 하기 위해 Supervised Learning 방법으로 진행했지만 이는 Anotation된 데이터가 많이 필요하다는 단점이 발생되게 됩니다. 그래서 Unsupervised Learning 방법 중 GAN을 이용한 Anomaly Detection을 진행하게 되었습니다.</p>
-<p>좀 더 쉽게 정리를 해보면…<br>Discriminator는 입력 이미지가 True/False의 확률을 구하는 classifier라고 생각하시면 됩니다. 여기서 Unsupervised Learning으로 접근하는건 굳이 Annotation 과정을 할 필요 없이 모델 알아서 처리를 하는 과정으로 접근한다는 것 입니다. Discriminator을 학습할 때 그 discribution 안에 속하지 않은 데이터들은 다 Fake라고 하지 안을까? 라는 아이디어에서 Normal Discribution의 outlier detection을 할 수 있는 AnoGAN이 탄생하게 된 것 입니다.</p>
-<h2 id="Unsupervised-Learning으로-접근한-이유"><a href="#Unsupervised-Learning으로-접근한-이유" class="headerlink" title="Unsupervised Learning으로 접근한 이유"></a>Unsupervised Learning으로 접근한 이유</h2><h3 id="⎮-Data-Imbalance-Problem"><a href="#⎮-Data-Imbalance-Problem" class="headerlink" title="⎮ Data Imbalance Problem"></a>⎮ Data Imbalance Problem</h3><p>위에서도 잠깐 언급을 하긴 했지만 의료데이터, 산업현장 데이터는 Normal 데이터는 많지만 Abnormal 데이터는 부족한 점이 특징입니다. 그래서 Supervised Learning으로 문제를 해결하려면 우선적으로 Data Imbalance 문제를 해결해야합니다. 이런 수고스러움을 덜고자 Unsupervised Learning 방법으로 접근하게 되었습니다.</p>
-<h3 id="⎮-Annotation-작업의-엄청난-비용"><a href="#⎮-Annotation-작업의-엄청난-비용" class="headerlink" title="⎮ Annotation 작업의 엄청난 비용"></a>⎮ Annotation 작업의 엄청난 비용</h3><p>아무래도 의료데이터는 비전문가들이 annotation을 할 수 없다는 제한점이 있다보니 전문가들이 직접 annotation을 해야합니다. 해보신 분들은 하시겠지만 엄청난 시간과 비용을 투자해야한다는 단점이 발생합니다. 또한 균일하게 완벽하게 100%로 annotation을 한다는 보장이 없다보니 데이터 마다 성능차이가 많이 발생할 수 있다는 문제가 존재합니다. 그래서 이런 과정을 하지 않고 Normal 데이터로만 학습 한 후 Normal Discribution에서 벗어나는 데이터가 들어올때 어느 부분이 outlier인지 detection 해주는 방법으로 진행했습니다.</p>
-<h2 id="AnoGAN의-동작-원리"><a href="#AnoGAN의-동작-원리" class="headerlink" title="AnoGAN의 동작 원리"></a>AnoGAN의 동작 원리</h2><h3 id="⎮-정상-데이터로-GAN-학습"><a href="#⎮-정상-데이터로-GAN-학습" class="headerlink" title="⎮ 정상 데이터로 GAN 학습"></a>⎮ 정상 데이터로 GAN 학습</h3><img src="/images/post_images/AnoGAN_step1.png" width="70%" height="70%">
-Generator Model이 어떤 latent space가 들어와도 Normal 이미지를 잘 생성할 수 있도록 GAN을 Normal 데이터로만 학습시켜야 합니다. 그러면 Generator Model은 Normal Manifold를 학습하게 되어서 Normal 데이터만 생성하게 됩니다.
-
-<h3 id="⎮-최적의-Z값-찾기"><a href="#⎮-최적의-Z값-찾기" class="headerlink" title="⎮ 최적의 Z값 찾기"></a>⎮ 최적의 Z값 찾기</h3><img src="/images/post_images/AnoGAN_step2.png" width="70%" height="70%">
-Generator와 Discriminator의 Parameter를 Fix시켜 더이상 Update 해주지 않는 상태로 latent vector $z_1$을 random sampling 시킨 후 Generator에 입력 데이터로 넣어준다 $G(z_1)$. Generator는 Normal 데이터의 Manifold를 학습한 상태여서 Normal image를 생성하게 된다.
-
-
-<h3 id="⎮-Residual-Loss"><a href="#⎮-Residual-Loss" class="headerlink" title="⎮ Residual Loss"></a>⎮ Residual Loss</h3><img src="/images/post_images/AnoGAN_step3.png" width="70%" height="70%">
-query image와 $G(z_1)$ 사이에서 다른 부분이 있는지 그 차이를 비교하는 과정입니다.
-
-<h3 id="⎮-Discrimination-Loss"><a href="#⎮-Discrimination-Loss" class="headerlink" title="⎮ Discrimination Loss"></a>⎮ Discrimination Loss</h3><img src="/images/post_images/AnoGAN_step4.png" width="70%" height="70%">
-Discriminator의 역할은 True/False를 판별해주는 역할을 갖고 있습니다. 이런 기능을 이용해서 들어오는 입력 데이터들의 확률분포(Probability Distribution)을 파악해서 True/False를 판단해줄 수 있습니다. 즉, Discrimination Loss는 $G(z_r)$의 Manifold 또는 Data Distribution에 잘 Mapping되도록 패널티를 부과하는 Loss 입니다. 다만, 이때 Discriminator의 중간 레이어에서 뽑은 Feture를 이용해서 계산을 하고 있습니다. 그 이유는 논문에서 중간층이 더 많은 표현력을 갖고 있다고 나와있습니다. 이러한 과정을 Feature Mapping이라고 불립니다.
-
-
-<p>$$<br>L_D(z_r) = \sum |f(x) - f(G(z_r))|<br>$$</p>
-<h3 id="⎮-Residual-Discrimination-Loss"><a href="#⎮-Residual-Discrimination-Loss" class="headerlink" title="⎮ Residual + Discrimination Loss"></a>⎮ Residual + Discrimination Loss</h3><img src="/images/post_images/AnoGAN_step5.png" width="70%" height="70%">
-
-
-<p>$$<br>L(z_r) = (1 - \lambda) \cdot L_R(z_r) + \lambda \cdot L_D(z_r)<br>$$</p>
-<p>$z_1$에 대한 L(z_r)를 구하는 과정입니다. 이 과정은 Generatir와 Discriminator의 weight를 Fixed 시켜주고 $L(z_r)$가 최소가 되도록 latent vector를 Gradient Descent 과정을 통해서 조정 시켜줍니다. </p>
-<p>따라서 $z_1 \rightarrow z_2 \rightarrow z_3 \rightarrow …. z_r$로 여러번 iteration 시켜주면서 제대로 query image와 $G(z)$와 mapping이 제대로 이루어지는 값을 찾는 과정을 진행합니다. (OCT 데이터셋은 500번 iteration 해주었습니다)</p>
-<p>또한 $L(z_r)$를 Anomaly Score로 사용해서 판단의 기준으로 사용하게 됩니다.</p>
-<h1 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h1><h2 id="DCGAN-1"><a href="#DCGAN-1" class="headerlink" title="DCGAN"></a>DCGAN</h2><p>DCGAN 원 논문에서 사용한 데이터는 RGB(3channels)이였습니다. 그렇지만 OCT 영상 데이터는 gray-scale(1channel)이여서 parameter만 변경을 시켜준 상태로 사용을 했습니다.<br><img src="/images/post_images/DCGAN.png" width="70%" height="70%"></p>
-<h2 id="AnoGAN-1"><a href="#AnoGAN-1" class="headerlink" title="AnoGAN"></a>AnoGAN</h2><img src="/images/post_images/AnoGAN.png" width="70%" height="70%">
-
-<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>AnoGAN 전 과정을 요약 해보자면</p>
-<ol>
-<li>Normal Data로만 GAN을 학습 시킵니다. 잘 학습된 GAN은 Normal 이미지만 생성하게 됩니다.</li>
-<li>latent space에서 $z_r$값을 random sampling 해줍니다.</li>
-<li>Sampling해준 $z_r$을 이용해 query data와 비슷하게 생성되는지 $G(z_r)$와 query image와 비교를 합니다. 이 과정은 inference 과정에서 이루어짐니다.</li>
-<li>query image와 $G(z_r)$이 비슷한 Distribution으로 mapping이 되었다면 비정상 query image가 들어왓다고 해도 $G(z_r)$은 정상이지만 query image와 구조적으론 똑같은 이미지로 생성이 될 것 입니다. 이 때 Anomaly Score를 계산해줍니다.</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-
-  
 
 
 
