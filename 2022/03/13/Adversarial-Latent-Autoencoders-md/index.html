@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mulkong.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+
+  <meta name="description" content="본 논문은, GAN의 Generator를 F, G로 Discriminator를 E, D로 각각 분리해서 연구를 진행했습니다. F에서 나온 Latent space와 E를 통해 나온 latent space가 서로 동일한 분포를 가진다고 가정을 한 상태로 연구가 진행 되었으며, F는 deterministic하게 latent space mapping이 이루어지">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Adversarial Latent Autoencoders">
+<meta property="og:url" content="http://mulkong.github.io/2022/03/13/Adversarial-Latent-Autoencoders-md/index.html">
+<meta property="og:site_name" content="Mulkong DeepLearning">
+<meta property="og:description" content="본 논문은, GAN의 Generator를 F, G로 Discriminator를 E, D로 각각 분리해서 연구를 진행했습니다. F에서 나온 Latent space와 E를 통해 나온 latent space가 서로 동일한 분포를 가진다고 가정을 한 상태로 연구가 진행 되었으며, F는 deterministic하게 latent space mapping이 이루어지">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0001.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0002.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0003.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0004.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0005.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0006.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0007.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0008.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0009.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0010.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0007/figure0011.png">
+<meta property="article:published_time" content="2022-03-13T08:09:42.000Z">
+<meta property="article:modified_time" content="2022-03-13T08:31:26.000Z">
+<meta property="article:author" content="mulkong">
+<meta property="article:tag" content="GAN">
+<meta property="article:tag" content="Vision">
+<meta property="article:tag" content="Autoencoder">
+<meta property="article:tag" content="Uncertainty">
+<meta property="article:tag" content="Unsupervised Learning">
+<meta property="article:tag" content="paper review">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mulkong.github.io/images/post_images/post0007/figure0001.png">
+
+
+<link rel="canonical" href="http://mulkong.github.io/2022/03/13/Adversarial-Latent-Autoencoders-md/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ko'
+  };
+</script>
+
+  <title>Adversarial Latent Autoencoders | Mulkong DeepLearning</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Mulkong DeepLearning</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">딥러닝 정리 블로그</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>홈</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>태그</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>카테고리</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>아카이브</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          목차
+        </li>
+        <li class="sidebar-nav-overview">
+          흝어보기
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Introduction"><span class="nav-number">2.</span> <span class="nav-text">1.Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Preliminaries"><span class="nav-number">3.</span> <span class="nav-text">2. Preliminaries</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AutoEncoders"><span class="nav-number">3.1.</span> <span class="nav-text">AutoEncoders</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Encoder"><span class="nav-number">3.1.0.0.1.</span> <span class="nav-text">Encoder</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Decoder"><span class="nav-number">3.1.0.0.2.</span> <span class="nav-text">Decoder</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GANs"><span class="nav-number">3.2.</span> <span class="nav-text">GANs</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#GAN"><span class="nav-number">3.2.0.0.1.</span> <span class="nav-text">GAN</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Generator"><span class="nav-number">3.2.0.0.2.</span> <span class="nav-text">Generator</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Discriminator"><span class="nav-number">3.2.0.0.3.</span> <span class="nav-text">Discriminator</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Adversarial-Latent-Autoencoders"><span class="nav-number">3.3.</span> <span class="nav-text">Adversarial Latent Autoencoders</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Architecture"><span class="nav-number">4.</span> <span class="nav-text">3. Architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ALAE"><span class="nav-number">4.0.1.</span> <span class="nav-text">ALAE</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Generator-F-code"><span class="nav-number">4.0.1.1.</span> <span class="nav-text">1) Generator F [code]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Generator-G-code"><span class="nav-number">4.0.1.2.</span> <span class="nav-text">2) Generator (G) [code]</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%8C-GAN"><span class="nav-number">4.0.1.2.1.</span> <span class="nav-text">📌 GAN</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%8C-ALAE"><span class="nav-number">4.0.1.2.2.</span> <span class="nav-text">📌 ALAE</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-Discriminator-Encoder-E"><span class="nav-number">4.0.1.2.3.</span> <span class="nav-text">3) Discriminator Encoder(E)</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#3-1-Matching-the-latent-space"><span class="nav-number">4.0.1.2.3.1.</span> <span class="nav-text">3-1) Matching the latent space</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-Discriminator-D"><span class="nav-number">4.0.1.2.4.</span> <span class="nav-text">4. Discriminator D</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StyleALAE"><span class="nav-number">4.1.</span> <span class="nav-text">StyleALAE</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">mulkong</p>
+  <div class="site-description" itemprop="description">공부한 내용을 바탕으로 정리한 기술블로그 입니다.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">포스트</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">카테고리</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">태그</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2022/03/13/Adversarial-Latent-Autoencoders-md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="mulkong">
+      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mulkong DeepLearning">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Adversarial Latent Autoencoders
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">작성일</span>
+      
+
+      <time title="Post created: 2022-03-13 17:09:42 / Updated at: 17:31:26" itemprop="dateCreated datePublished" datetime="2022-03-13T17:09:42+09:00">2022-03-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <hr>
+<ul>
+<li>본 논문은, GAN의 Generator를 F, G로 Discriminator를 E, D로 각각 분리해서 연구를 진행했습니다.</li>
+<li>F에서 나온 Latent space와 E를 통해 나온 latent space가 서로 동일한 분포를 가진다고 가정을 한 상태로 연구가 진행 되었으며, F는 deterministic하게 latent space mapping이 이루어지고, G와 E는 독립적이고 이미 알려진 분포의 노이즈인 \( \eta\)를 입력으로 주어 stochastic하게 만듭니다.</li>
+<li>결론적으로 Latent space의 확률 분포를 Adversarial하게 학습할 수 있는 장점이 있으며 그로 인하여 GAN과 비슷한 생성 능력을 지니고 disentangled representations을 학습 한 점을 보여주고 있습니다.</li>
+</ul>
+<hr>
+<ul>
+<li>Adversarial Latent Autoencoders에 대해 간단하게 리뷰를 해본 후 다음 포스팅에서는 논문을 바탕으로 code에서 어떤식으로 구현이 되었는지 살펴보도록 하겠습니다.</li>
+</ul>
+<p>✔️ [논문 리뷰] Adversarial Latent Autoencoders<br>◻︎ [코드 리뷰] Adversarial Latent Autoencoders</p>
+<hr>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><hr>
+<p><strong>Autoencoder의 목표</strong><br>Autoencoder는 encoder-generator map을 동시에 학습하여 generation and representation properties을 결합하는 것을 목표로 하는 unsupervised 접근 방식 입니다.</p>
+<p><strong>Autoencoder의 한계</strong><br>Autoencoder에 대한 많은 연구가 진행되었지만, GANs(<em>Generative Adversarial Networks</em>)과 동일한 생성 능력을 가지고 있는지, 아니면 disentangled representations을 학습하는지에 대한 문제는 완전히 다루어지지 않았습니다.</p>
+<p><strong>제안한 방법</strong><br>본 논문에서는 위에서 언급한 문제인</p>
+<ul>
+<li><code>GANs와 동일한 생성 능력을 가지고 있는지</code></li>
+<li><code>disentangled representations을 학습하고 있는지</code></li>
+</ul>
+<p>에 대한 문제를 해결하는 autoencoder를 소개하며 저자들은 이 네트워크를 <code>Adversarial Latent Autoencoder</code>라고 부릅니다.</p>
+<p><strong>2가지의 autoencoder 설계</strong><br>본 논문에서는 2가지의 autoencoder를 설계했습니다.</p>
+<ul>
+<li><code>MLP Encoder를 기반으로 하는 encoder</code></li>
+<li><code>StyleGAN의 Generator를 기반으로 하는 StyleALAE</code></li>
+</ul>
+<p>설계된 두가지의 아키텍처의 <code>disentanglement properties</code>를 확인합니다.</p>
+<p>StyleALAE는 StyleGAN과 비슷한 품질의 1024x1024 얼굴 이미지를 생성할 수 있으며, 동일한 해상도에서 실제 이미지를 기반으로 face <code>reconstructions</code>, <code>manipulations</code>도 생성할 수 있음을 보여주고 있습니다. </p>
+<blockquote>
+<p>이로써 이 논문에서 해결하고자 하는 (1) GANs와 동일한 생성 능력을 가지고 있는지. (2) 네트워크가 disentangled representations을 학습하고 있는지에 대한 문제를 해결했다는 것을 알 수 있습니다.</p>
+</blockquote>
+<p>따라서 ALAE는 GAN의 성능과 비슷하거나 그 성능을 능가하는 최초의 Autoencoder라고 소개하고 있습니다.</p>
+<p></br></br></p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1.Introduction"></a>1.Introduction</h1><hr>
+<p>지금까지 발표된 이미지 생성 네트워크를 보면 아래와 같이 크게 두가지 특징을 관심있게 볼 수 있다고 생각할 수 있습니다.</p>
+<ul>
+<li>GAN처럼 얼마나 고해상도 이미지를 실제와 똑같게 생성할 수 있는지</li>
+<li>disentangled representations 학습이 잘 이루어졌는지.</li>
+</ul>
+<p>지금까지 진행된 연구들의 논문들을 보면 아직까지는 고해상도 이미지를 생성하는 네트워크는 Autoencoder 보다는 GAN이라고 다들 이렇게 생각하실겁니다. 또한 Autoencoder는 지금까지는 entangled representations을 배워 manipulations가 불가능했습니다.</p>
+<p>이 논문의 저자들은, 이때당시 나온 GAN의 발전 동향, 특히 StyleGAN의 아이디어를 응용하여 위에서 언급한 근본적인 한계들을 해결하는 new AutoEncoder를 제안하고 있습니다.</p>
+<p>StyleALAE의 생성 결과부터보면 아래 그림 1처럼 GAN처럼 고해상도 이미지를 잘 생성하고 있는것을 보여주고 있습니다.</p>
+<p><img src="/images/post_images/post0007/figure0001.png"> <center><em>그림 1. FFHA generation. Generations with StyleALAE trained on FFHQ at 1024 x 1024</em></center></p>
+<p></br></br></p>
+<h1 id="2-Preliminaries"><a href="#2-Preliminaries" class="headerlink" title="2. Preliminaries"></a>2. Preliminaries</h1><hr>
+<h2 id="AutoEncoders"><a href="#AutoEncoders" class="headerlink" title="AutoEncoders"></a>AutoEncoders</h2><p><img src="/images/post_images/post0007/figure0002.png"> <center><em>그림 2. Autoencoder architecture (출처:<a target="_blank" rel="noopener" href="https://learnopencv.com/variational-autoencoder-in-tensorflow/">https://learnopencv.com/variational-autoencoder-in-tensorflow/</a>)</em></center></p>
+<h5 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h5><p>입력된 이미지에 대한 특징(feature)인 고차원 input space을 저차원 latent space \( z\)로 압축하는 모델이며 식은 다음과 같습니다.<br>$$ z = E(x) $$</p>
+<h5 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h5><p>Encoder에 의해 고차원에서 저차원으로 인코딩된 \( z\)를 다시 입력된 이미지와 동일한 도메인으로 재구성 하는 모델이며 식은 다음과 같습니다.<br>$$ \hat{x} = D(z) $$</p>
+<h2 id="GANs"><a href="#GANs" class="headerlink" title="GANs"></a>GANs</h2><hr>
+<p><img src="/images/post_images/post0007/figure0003.png"> <center><em>그림 3. GANs architecture (출처: <a target="_blank" rel="noopener" href="https://developers.google.com/machine-learning/gan/gan_structure">https://developers.google.com/machine-learning/gan/gan_structure</a>)</em></center></p>
+<h5 id="GAN"><a href="#GAN" class="headerlink" title="GAN"></a>GAN</h5><p>Generator와 Discriminator로 구성되어있으며 서로 Adversarial Training 하는 방식으로 고해상도 이미지를 생성하도록 학습하는 생성모델 입니다. 이는 \( q(x)\)가 \( P_D(x)\)만큼 가깝도록 G를 학습 하는것을 목표로 하게 되며 다른 의미로는 G가 D를 속여서 D가 진짜인지 가짜인지 헷갈리게 만들도록 학습 되는것을 목표로 합니다.</p>
+<h5 id="Generator"><a href="#Generator" class="headerlink" title="Generator"></a>Generator</h5><p>Autoencoder처럼 입력 이미지를 latent space로 직접 인코딩 하는 방식이 아니라, <strong><em>synthetic distribution \( q(x)\)를 표현하는 새로운 이미지를 생성하기 위해 이전에 알려진 \( p(z)\)의 latent space \( Z\)을 학습하는 네트워크</em></strong> 입니다.</p>
+<h5 id="Discriminator"><a href="#Discriminator" class="headerlink" title="Discriminator"></a>Discriminator</h5><p>학습 데이터셋의 True distribution \( P_D(x)\)를 나타내는 이미지와 생성된 이미지를 구분하는 네트워크 입니다. 즉, 진짜인지 가짜인지 구분하는 binary classifier라고도 볼 수 있습니다.</p>
+<h2 id="Adversarial-Latent-Autoencoders"><a href="#Adversarial-Latent-Autoencoders" class="headerlink" title="Adversarial Latent Autoencoders"></a>Adversarial Latent Autoencoders</h2><hr>
+<p>Autoencoder는 지금까지 많은 연구가 진행되었지만 크게 2가지 문제에 대해서는 아직 해결을 못한 상태라고 볼 수 있습니다. (<em>자주 언급되고 있는 내용이지만 다시 한번 언급을 하도록 하겠습니다.</em>)</p>
+<ul>
+<li><code>GANs와 비슷한 생성 능력을 가지고 있는가?</code></li>
+<li><code>disentangled representations을 잘 학습하였는가?</code></li>
+</ul>
+<p>이 논문 저자는 위에서 언급한 두가지 문제를 모두 해결할 수 있는 AutoEncoder를 설계했으며 자세한 아키텍처는 아래에서 다루도록 하겠습니다.</p>
+<p></br></br></p>
+<h1 id="3-Architecture"><a href="#3-Architecture" class="headerlink" title="3. Architecture"></a>3. Architecture</h1><hr>
+<h3 id="ALAE"><a href="#ALAE" class="headerlink" title="ALAE"></a>ALAE</h3><p><img src="/images/post_images/post0007/figure0004.png"> <center><em>그림 4. ALAE Architecture. Architecture of an Adversarial Latent Autoencoder.</em></center></p>
+<p>ALAE는 generator <strong>G</strong>, discriminator <strong>D</strong>를 \(\textit{G} = F \circ G \) and \( \textit{D} = D \circ E \)로 decomposing한 네트워크 입니다. 이때 decomposed 네트워크 사이의 latent space 즉, \(F(z)\)를 통해 나온 \( w\)와 discriminator E인 \(q_G(x\vert w, \eta)\)에 의해서 나온 \( w\)가 서로 동일하다는 가정을 지니고 있느며 이 latent space를 \( \mathcal{W}\)로 표현하고 있습니다.</p>
+<h4 id="1-Generator-F-code"><a href="#1-Generator-F-code" class="headerlink" title="1) Generator F [code]"></a>1) Generator <strong>F</strong> <a target="_blank" rel="noopener" href="https://github.com/podgorskiy/ALAE/blob/42bcf2e5f213ff1c919483678344f3da6bc90f8a/model.py#L44">[code]</a></h4><p><strong>F</strong>는 prior distribution \( p(z) \to \) intermediate latent space \( w \) distribution \( q_F(w)\)로 변환하는 역할을 가지고 있습니다.</p>
+<p><img src="/images/post_images/post0007/figure0005.png"> <center><em>그림 4. intermediate latent space로 변환하는 역할인 F</em></center></p>
+<p>이 논문에서 <strong>disentaglement</strong>에 대해 아주 중요한 이야기를 하고 있습니다.</p>
+<blockquote>
+<p>“<code>input space에서 멀리 떨어진 intermediate latent space 가 더 나은 disentanglement properties를 갖는 경향</code>이 있음을 보여주었다.”</p>
+</blockquote>
+<p>따라서 저자는, <strong>F</strong>가 most general cases에서 deterministic map이라고 가정했습니다. 따라서 <strong>F</strong>는 know prior p(z)에서 샘플을 가져와서 q_F(w)을 출력하게 됩니다.</p>
+<p><em>deterministic mapping에 대해 궁금하신 분들은 해당 링크를 참고해주시기 바랍니다. <a target="_blank" rel="noopener" href="https://wikidocs.net/3413">[link]</a></em></p>
+</br>
+
+<h4 id="2-Generator-G-code"><a href="#2-Generator-G-code" class="headerlink" title="2) Generator (G) [code]"></a>2) Generator (G) <a target="_blank" rel="noopener" href="https://github.com/podgorskiy/ALAE/blob/42bcf2e5f213ff1c919483678344f3da6bc90f8a/model.py#L51">[code]</a></h4><p>기존 original GAN과 차이점부터 비교해가며 알아보면,</p>
+<h5 id="📌-GAN"><a href="#📌-GAN" class="headerlink" title="📌 GAN"></a>📌 GAN</h5><ul>
+<li>Generator에 대한 입력은 latent space에서 직접 샘플링 </li>
+<li>생성된 이미지는 binary classifier처럼 진짜/가짜로 분류해주는 Discriminator에 바로 입력.<h5 id="📌-ALAE"><a href="#📌-ALAE" class="headerlink" title="📌 ALAE"></a>📌 ALAE</h5></li>
+<li><strong>F</strong>에서 학습된 intermediate latent space \( w\)에서 샘플링</li>
+<li>G에서 생성된 이미지가 Encoder를 먼저 거친 뒤 Discriminator에 입력.</li>
+</ul>
+<p>저자는 G가 known fixed distribution \( p_\eta(\eta)\)에서 샘플링된 independent noisy input \( \eta\)에 optionally 하게 의존할 수 있다고 가정하고 있습니다. 따라서 G에 대한 입력은 \( q_F(w)\)와 optionally \( p_\eta(\eta)\) 입니다. 그래서 해당 식은 다음과 같이 정의됩니다.</p>
+<p><img src="/images/post_images/post0007/figure0006.png"> <center><em>그림 6. Generator G에 대한되는 영역.</em></center></p>
+<p>💡 \(q_G(x\vert w, \eta)\): \(w\) and \(\eta\)가 주어지면 생성된 이미지 \(x \)의 조건부 확률(conditional probability)</p>
+<p><img src="/images/post_images/post0007/figure0007.png"> <center><em>그림 7. Discriminator Encoder E에 해당되는 영역</em></center></p>
+</br>
+
+<h5 id="3-Discriminator-Encoder-E"><a href="#3-Discriminator-Encoder-E" class="headerlink" title="3) Discriminator Encoder(E)"></a>3) Discriminator Encoder(E)</h5><p>위에서 언급했던대로 decomposed 네트워크 사이의 latent space가 서로 동일하다는 가정을 지니고 있느며 latent space를 \( w\)로 표현하고 있음을 언급 했습니다. </p>
+<p>즉, intermediate latent space \( w\)로 data space를 인코딩 하며 이는 \( \textit{G} = F \circ G\) and \( D = E \circ D\) 둘다 동일한 latent space을 갖습니다.</p>
+<p>학습중에 Encoder에 대한 입력은 실제 데이터 분포 \( P_D(x)\)의 real image 또는 synthetic distribution q(x)를 나타내는 생성 이미지 입니다.</p>
+<img src="/images/post_images/post0007/figure0008.png" width="100%" height="100%">
+
+<p>synthetic distribution에서 입력을 가지고올 때 encoder의 출력을 다음 식과 같습니다.</p>
+<img src="/images/post_images/post0007/figure0009.png" width="100%" height="100%">
+
+<p>\( q_E(w)\): 주어진 data space에서 latent space \(w \)의 conditional probability distribution</p>
+</br>
+
+<p>실제 데이터 분포 \( P_D(x)\)에서 입력을 가져올 때 Encoder의 출력은 아래 식과 같습니다.</p>
+<p>$$ q_{E, D}(w) = \int_{x} q(w \vert x) P_D(x) dx$$</p>
+<blockquote>
+<p>위와 같은 식이 성립되는 이유는, <strong>F</strong>에서 나온 intermediate latent space \( w\)와 <strong>E</strong>에서 나온 intermediate latent sapce \( w\)가 동일하다는 가정하에 연구가 진행된 것 입니다. 따라서 아래와 같은 식이 성립됩니다.</p>
+</blockquote>
+<p>$$ q_F(w) = q_E(w) $$</p>
+<p>ALAE는 adversarial strategy로 학습이 진행됩니다. 따라서 \( q(x)\) → \( P_D(x)\)가 되며 이는 \(q_E(x)\) → \(q_{E, D}(x)\)로 이동하는 것을 암시합니다.</p>
+</br>
+
+<h6 id="3-1-Matching-the-latent-space"><a href="#3-1-Matching-the-latent-space" class="headerlink" title="3-1) Matching the latent space"></a>3-1) Matching the latent space</h6><p>latenet space에 대한 가정은 \(q_E(w)\)의 output distribution이 \(q_F(w)\)의 input distribution과 유사하다는 점 입니다. 이 개념을 바탕으로 실제 학습을 진행할 때 두 분포간의 squared difference를 최소화 하는 방향으로 학습을 진행하게 됩니다.</p>
+</br>
+
+<p>일반적인 autoencoder에서 입력된 이미지와 Decoder에 의해 복원된 이미지를 이용하여reconstruction loss을 구할 때 사용된 loss는 <code>L2 loss</code> 입니다. L2 loss는 data space에서 연산이 이루어지만, human visual perception을 반영하지 않는다는 특징이 있습니다. 이러한 이유로 인해 autoencoder가 GAN과 같은 선명한 이미지를 생성할 수 없게 되는 이유 중 하나 입니다.</p>
+</br>
+
+<h5 id="4-Discriminator-D"><a href="#4-Discriminator-D" class="headerlink" title="4. Discriminator D"></a>4. Discriminator D</h5><p>Encoder에 의해 제공되는 intermediate latent space가 입력되며 진짜인지 가짜인지 판별해주는 역할을 하는 네트워크 입니다.</p>
+<p>D는 학습 과정에서 2번 호출됩니다.</p>
+<ul>
+<li>G에 의해 생성된 이미지 \(q_G(x\vert w, \eta)\)가 E를 통해 latent space mapping이 이루어지고, 그 latent space \( q_E(w)\)가 D에 제공되는 경우.</li>
+<li>실제 데이터 \( x\)가 E에 입력되고 그로 인해 나오는 출력이 D에 제공되는 경우.</li>
+</ul>
+<blockquote>
+<p>이건 그냥 일반적인 GAN 학습 방법에서 Discriminator 역할을 떠올리시면 됩니다.</p>
+</blockquote>
+<hr>
+<h2 id="StyleALAE"><a href="#StyleALAE" class="headerlink" title="StyleALAE"></a>StyleALAE</h2></br>
+
+<p>위 내용까지는 ALAE에 대한 특징 및 아키텍처에 대해 알아보았습니다. ALAE의 기본 아키텍처에다가 StyleGAN에 적용하여 StyleGAN과 거의 비슷한 성능을 보이는 StyleALAE 아키텍처에 대해 간단하게 알아보도록 하겠습니다.</p>
+<p><img src="/images/post_images/post0007/figure0010.png"> <center><em>그림 8. StyleALAE Architecture</em></center></p>
+<p>StyleALAE는 StyleGAN의 Generator 부분과 ALAE를 결합한 아키텍처 입니다. 따라서 StyleALAE는 다은과 같이 구성됩니다.</p>
+<ul>
+<li>(그림 9)와 같이 ALAE의 Generator가 StyleGAN의 Generator로 변경.</li>
+<li>style information을 추출하는 Encoder network E는 Generator와 대칭이 되도록 구성 됩니다.</li>
+</ul>
+<p><img src="/images/post_images/post0007/figure0011.png"> <center><em>그림 9</em></center></p>
+<p><strong>IN(Instance Normalization)</strong><br>각 레이어 \( i^{th} \)의 Style content를 추출하며, 입력된 영상에 대한 Normalization을 진행합니다.</p>
+<p><strong>Style Information</strong><br>IN에 의해 추출된 style content를 구성하는 channel-wise average \( \mu \)와 \( \sigma\)를 의미 합니다.</p>
+<p>Encoder는 \( i^{th}\)의 style content들은 latent space \( w\)와 선형적으로 관련된 symmetric generator(G of StyleALAE)의 AdaIN(Adaptive Instance Normalization) 으로 입력 됩니다. 따라서, Encoder의 각 레이어의 IN에 의해 추출된 style content는 multilinear map을 통해 latent space에 mapping 됩니다.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/GAN/" rel="tag"># GAN</a>
+              <a href="/tags/Vision/" rel="tag"># Vision</a>
+              <a href="/tags/Autoencoder/" rel="tag"># Autoencoder</a>
+              <a href="/tags/Uncertainty/" rel="tag"># Uncertainty</a>
+              <a href="/tags/Unsupervised-Learning/" rel="tag"># Unsupervised Learning</a>
+              <a href="/tags/paper-review/" rel="tag"># paper review</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/01/01/Dual-Contrastive-Learning-for-Unsupervised-Image-to-Image-Translation/" rel="prev" title="Dual Contrastive Learning for Unsupervised Image-to-Image Translation">
+                  <i class="fa fa-chevron-left"></i> Dual Contrastive Learning for Unsupervised Image-to-Image Translation
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mulkong</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

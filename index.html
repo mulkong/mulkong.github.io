@@ -193,18 +193,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">포스트</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">카테고리</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">태그</span>
       </div>
   </nav>
@@ -243,6 +243,444 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2022/03/13/Adversarial-Latent-Autoencoders-md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="mulkong">
+      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mulkong DeepLearning">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/13/Adversarial-Latent-Autoencoders-md/" class="post-title-link" itemprop="url">Adversarial Latent Autoencoders</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">작성일</span>
+      
+
+      <time title="Post created: 2022-03-13 17:09:42 / Updated at: 17:31:26" itemprop="dateCreated datePublished" datetime="2022-03-13T17:09:42+09:00">2022-03-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <hr>
+<ul>
+<li>본 논문은, GAN의 Generator를 F, G로 Discriminator를 E, D로 각각 분리해서 연구를 진행했습니다.</li>
+<li>F에서 나온 Latent space와 E를 통해 나온 latent space가 서로 동일한 분포를 가진다고 가정을 한 상태로 연구가 진행 되었으며, F는 deterministic하게 latent space mapping이 이루어지고, G와 E는 독립적이고 이미 알려진 분포의 노이즈인 \( \eta\)를 입력으로 주어 stochastic하게 만듭니다.</li>
+<li>결론적으로 Latent space의 확률 분포를 Adversarial하게 학습할 수 있는 장점이 있으며 그로 인하여 GAN과 비슷한 생성 능력을 지니고 disentangled representations을 학습 한 점을 보여주고 있습니다.</li>
+</ul>
+<hr>
+<ul>
+<li>Adversarial Latent Autoencoders에 대해 간단하게 리뷰를 해본 후 다음 포스팅에서는 논문을 바탕으로 code에서 어떤식으로 구현이 되었는지 살펴보도록 하겠습니다.</li>
+</ul>
+<p>✔️ [논문 리뷰] Adversarial Latent Autoencoders<br>◻︎ [코드 리뷰] Adversarial Latent Autoencoders</p>
+<hr>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><hr>
+<p><strong>Autoencoder의 목표</strong><br>Autoencoder는 encoder-generator map을 동시에 학습하여 generation and representation properties을 결합하는 것을 목표로 하는 unsupervised 접근 방식 입니다.</p>
+<p><strong>Autoencoder의 한계</strong><br>Autoencoder에 대한 많은 연구가 진행되었지만, GANs(<em>Generative Adversarial Networks</em>)과 동일한 생성 능력을 가지고 있는지, 아니면 disentangled representations을 학습하는지에 대한 문제는 완전히 다루어지지 않았습니다.</p>
+<p><strong>제안한 방법</strong><br>본 논문에서는 위에서 언급한 문제인</p>
+<ul>
+<li><code>GANs와 동일한 생성 능력을 가지고 있는지</code></li>
+<li><code>disentangled representations을 학습하고 있는지</code></li>
+</ul>
+<p>에 대한 문제를 해결하는 autoencoder를 소개하며 저자들은 이 네트워크를 <code>Adversarial Latent Autoencoder</code>라고 부릅니다.</p>
+<p><strong>2가지의 autoencoder 설계</strong><br>본 논문에서는 2가지의 autoencoder를 설계했습니다.</p>
+<ul>
+<li><code>MLP Encoder를 기반으로 하는 encoder</code></li>
+<li><code>StyleGAN의 Generator를 기반으로 하는 StyleALAE</code></li>
+</ul>
+<p>설계된 두가지의 아키텍처의 <code>disentanglement properties</code>를 확인합니다.</p>
+<p>StyleALAE는 StyleGAN과 비슷한 품질의 1024x1024 얼굴 이미지를 생성할 수 있으며, 동일한 해상도에서 실제 이미지를 기반으로 face <code>reconstructions</code>, <code>manipulations</code>도 생성할 수 있음을 보여주고 있습니다. </p>
+<blockquote>
+<p>이로써 이 논문에서 해결하고자 하는 (1) GANs와 동일한 생성 능력을 가지고 있는지. (2) 네트워크가 disentangled representations을 학습하고 있는지에 대한 문제를 해결했다는 것을 알 수 있습니다.</p>
+</blockquote>
+<p>따라서 ALAE는 GAN의 성능과 비슷하거나 그 성능을 능가하는 최초의 Autoencoder라고 소개하고 있습니다.</p>
+<p></br></br></p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1.Introduction"></a>1.Introduction</h1><hr>
+<p>지금까지 발표된 이미지 생성 네트워크를 보면 아래와 같이 크게 두가지 특징을 관심있게 볼 수 있다고 생각할 수 있습니다.</p>
+<ul>
+<li>GAN처럼 얼마나 고해상도 이미지를 실제와 똑같게 생성할 수 있는지</li>
+<li>disentangled representations 학습이 잘 이루어졌는지.</li>
+</ul>
+<p>지금까지 진행된 연구들의 논문들을 보면 아직까지는 고해상도 이미지를 생성하는 네트워크는 Autoencoder 보다는 GAN이라고 다들 이렇게 생각하실겁니다. 또한 Autoencoder는 지금까지는 entangled representations을 배워 manipulations가 불가능했습니다.</p>
+<p>이 논문의 저자들은, 이때당시 나온 GAN의 발전 동향, 특히 StyleGAN의 아이디어를 응용하여 위에서 언급한 근본적인 한계들을 해결하는 new AutoEncoder를 제안하고 있습니다.</p>
+<p>StyleALAE의 생성 결과부터보면 아래 그림 1처럼 GAN처럼 고해상도 이미지를 잘 생성하고 있는것을 보여주고 있습니다.</p>
+<p><img src="/images/post_images/post0007/figure0001.png"> <center><em>그림 1. FFHA generation. Generations with StyleALAE trained on FFHQ at 1024 x 1024</em></center></p>
+<p></br></br></p>
+<h1 id="2-Preliminaries"><a href="#2-Preliminaries" class="headerlink" title="2. Preliminaries"></a>2. Preliminaries</h1><hr>
+<h2 id="AutoEncoders"><a href="#AutoEncoders" class="headerlink" title="AutoEncoders"></a>AutoEncoders</h2><p><img src="/images/post_images/post0007/figure0002.png"> <center><em>그림 2. Autoencoder architecture (출처:<a target="_blank" rel="noopener" href="https://learnopencv.com/variational-autoencoder-in-tensorflow/">https://learnopencv.com/variational-autoencoder-in-tensorflow/</a>)</em></center></p>
+<h5 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h5><p>입력된 이미지에 대한 특징(feature)인 고차원 input space을 저차원 latent space \( z\)로 압축하는 모델이며 식은 다음과 같습니다.<br>$$ z = E(x) $$</p>
+<h5 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h5><p>Encoder에 의해 고차원에서 저차원으로 인코딩된 \( z\)를 다시 입력된 이미지와 동일한 도메인으로 재구성 하는 모델이며 식은 다음과 같습니다.<br>$$ \hat{x} = D(z) $$</p>
+<h2 id="GANs"><a href="#GANs" class="headerlink" title="GANs"></a>GANs</h2><hr>
+<p><img src="/images/post_images/post0007/figure0003.png"> <center><em>그림 3. GANs architecture (출처: <a target="_blank" rel="noopener" href="https://developers.google.com/machine-learning/gan/gan_structure">https://developers.google.com/machine-learning/gan/gan_structure</a>)</em></center></p>
+<h5 id="GAN"><a href="#GAN" class="headerlink" title="GAN"></a>GAN</h5><p>Generator와 Discriminator로 구성되어있으며 서로 Adversarial Training 하는 방식으로 고해상도 이미지를 생성하도록 학습하는 생성모델 입니다. 이는 \( q(x)\)가 \( P_D(x)\)만큼 가깝도록 G를 학습 하는것을 목표로 하게 되며 다른 의미로는 G가 D를 속여서 D가 진짜인지 가짜인지 헷갈리게 만들도록 학습 되는것을 목표로 합니다.</p>
+<h5 id="Generator"><a href="#Generator" class="headerlink" title="Generator"></a>Generator</h5><p>Autoencoder처럼 입력 이미지를 latent space로 직접 인코딩 하는 방식이 아니라, <strong><em>synthetic distribution \( q(x)\)를 표현하는 새로운 이미지를 생성하기 위해 이전에 알려진 \( p(z)\)의 latent space \( Z\)을 학습하는 네트워크</em></strong> 입니다.</p>
+<h5 id="Discriminator"><a href="#Discriminator" class="headerlink" title="Discriminator"></a>Discriminator</h5><p>학습 데이터셋의 True distribution \( P_D(x)\)를 나타내는 이미지와 생성된 이미지를 구분하는 네트워크 입니다. 즉, 진짜인지 가짜인지 구분하는 binary classifier라고도 볼 수 있습니다.</p>
+<h2 id="Adversarial-Latent-Autoencoders"><a href="#Adversarial-Latent-Autoencoders" class="headerlink" title="Adversarial Latent Autoencoders"></a>Adversarial Latent Autoencoders</h2><hr>
+<p>Autoencoder는 지금까지 많은 연구가 진행되었지만 크게 2가지 문제에 대해서는 아직 해결을 못한 상태라고 볼 수 있습니다. (<em>자주 언급되고 있는 내용이지만 다시 한번 언급을 하도록 하겠습니다.</em>)</p>
+<ul>
+<li><code>GANs와 비슷한 생성 능력을 가지고 있는가?</code></li>
+<li><code>disentangled representations을 잘 학습하였는가?</code></li>
+</ul>
+<p>이 논문 저자는 위에서 언급한 두가지 문제를 모두 해결할 수 있는 AutoEncoder를 설계했으며 자세한 아키텍처는 아래에서 다루도록 하겠습니다.</p>
+<p></br></br></p>
+<h1 id="3-Architecture"><a href="#3-Architecture" class="headerlink" title="3. Architecture"></a>3. Architecture</h1><hr>
+<h3 id="ALAE"><a href="#ALAE" class="headerlink" title="ALAE"></a>ALAE</h3><p><img src="/images/post_images/post0007/figure0004.png"> <center><em>그림 4. ALAE Architecture. Architecture of an Adversarial Latent Autoencoder.</em></center></p>
+<p>ALAE는 generator <strong>G</strong>, discriminator <strong>D</strong>를 \(\textit{G} = F \circ G \) and \( \textit{D} = D \circ E \)로 decomposing한 네트워크 입니다. 이때 decomposed 네트워크 사이의 latent space 즉, \(F(z)\)를 통해 나온 \( w\)와 discriminator E인 \(q_G(x\vert w, \eta)\)에 의해서 나온 \( w\)가 서로 동일하다는 가정을 지니고 있느며 이 latent space를 \( \mathcal{W}\)로 표현하고 있습니다.</p>
+<h4 id="1-Generator-F-code"><a href="#1-Generator-F-code" class="headerlink" title="1) Generator F [code]"></a>1) Generator <strong>F</strong> <a target="_blank" rel="noopener" href="https://github.com/podgorskiy/ALAE/blob/42bcf2e5f213ff1c919483678344f3da6bc90f8a/model.py#L44">[code]</a></h4><p><strong>F</strong>는 prior distribution \( p(z) \to \) intermediate latent space \( w \) distribution \( q_F(w)\)로 변환하는 역할을 가지고 있습니다.</p>
+<p><img src="/images/post_images/post0007/figure0005.png"> <center><em>그림 4. intermediate latent space로 변환하는 역할인 F</em></center></p>
+<p>이 논문에서 <strong>disentaglement</strong>에 대해 아주 중요한 이야기를 하고 있습니다.</p>
+<blockquote>
+<p>“<code>input space에서 멀리 떨어진 intermediate latent space 가 더 나은 disentanglement properties를 갖는 경향</code>이 있음을 보여주었다.”</p>
+</blockquote>
+<p>따라서 저자는, <strong>F</strong>가 most general cases에서 deterministic map이라고 가정했습니다. 따라서 <strong>F</strong>는 know prior p(z)에서 샘플을 가져와서 q_F(w)을 출력하게 됩니다.</p>
+<p><em>deterministic mapping에 대해 궁금하신 분들은 해당 링크를 참고해주시기 바랍니다. <a target="_blank" rel="noopener" href="https://wikidocs.net/3413">[link]</a></em></p>
+</br>
+
+<h4 id="2-Generator-G-code"><a href="#2-Generator-G-code" class="headerlink" title="2) Generator (G) [code]"></a>2) Generator (G) <a target="_blank" rel="noopener" href="https://github.com/podgorskiy/ALAE/blob/42bcf2e5f213ff1c919483678344f3da6bc90f8a/model.py#L51">[code]</a></h4><p>기존 original GAN과 차이점부터 비교해가며 알아보면,</p>
+<h5 id="📌-GAN"><a href="#📌-GAN" class="headerlink" title="📌 GAN"></a>📌 GAN</h5><ul>
+<li>Generator에 대한 입력은 latent space에서 직접 샘플링 </li>
+<li>생성된 이미지는 binary classifier처럼 진짜/가짜로 분류해주는 Discriminator에 바로 입력.<h5 id="📌-ALAE"><a href="#📌-ALAE" class="headerlink" title="📌 ALAE"></a>📌 ALAE</h5></li>
+<li><strong>F</strong>에서 학습된 intermediate latent space \( w\)에서 샘플링</li>
+<li>G에서 생성된 이미지가 Encoder를 먼저 거친 뒤 Discriminator에 입력.</li>
+</ul>
+<p>저자는 G가 known fixed distribution \( p_\eta(\eta)\)에서 샘플링된 independent noisy input \( \eta\)에 optionally 하게 의존할 수 있다고 가정하고 있습니다. 따라서 G에 대한 입력은 \( q_F(w)\)와 optionally \( p_\eta(\eta)\) 입니다. 그래서 해당 식은 다음과 같이 정의됩니다.</p>
+<p><img src="/images/post_images/post0007/figure0006.png"> <center><em>그림 6. Generator G에 대한되는 영역.</em></center></p>
+<p>💡 \(q_G(x\vert w, \eta)\): \(w\) and \(\eta\)가 주어지면 생성된 이미지 \(x \)의 조건부 확률(conditional probability)</p>
+<p><img src="/images/post_images/post0007/figure0007.png"> <center><em>그림 7. Discriminator Encoder E에 해당되는 영역</em></center></p>
+</br>
+
+<h5 id="3-Discriminator-Encoder-E"><a href="#3-Discriminator-Encoder-E" class="headerlink" title="3) Discriminator Encoder(E)"></a>3) Discriminator Encoder(E)</h5><p>위에서 언급했던대로 decomposed 네트워크 사이의 latent space가 서로 동일하다는 가정을 지니고 있느며 latent space를 \( w\)로 표현하고 있음을 언급 했습니다. </p>
+<p>즉, intermediate latent space \( w\)로 data space를 인코딩 하며 이는 \( \textit{G} = F \circ G\) and \( D = E \circ D\) 둘다 동일한 latent space을 갖습니다.</p>
+<p>학습중에 Encoder에 대한 입력은 실제 데이터 분포 \( P_D(x)\)의 real image 또는 synthetic distribution q(x)를 나타내는 생성 이미지 입니다.</p>
+<img src="/images/post_images/post0007/figure0008.png" width="100%" height="100%">
+
+<p>synthetic distribution에서 입력을 가지고올 때 encoder의 출력을 다음 식과 같습니다.</p>
+<img src="/images/post_images/post0007/figure0009.png" width="100%" height="100%">
+
+<p>\( q_E(w)\): 주어진 data space에서 latent space \(w \)의 conditional probability distribution</p>
+</br>
+
+<p>실제 데이터 분포 \( P_D(x)\)에서 입력을 가져올 때 Encoder의 출력은 아래 식과 같습니다.</p>
+<p>$$ q_{E, D}(w) = \int_{x} q(w \vert x) P_D(x) dx$$</p>
+<blockquote>
+<p>위와 같은 식이 성립되는 이유는, <strong>F</strong>에서 나온 intermediate latent space \( w\)와 <strong>E</strong>에서 나온 intermediate latent sapce \( w\)가 동일하다는 가정하에 연구가 진행된 것 입니다. 따라서 아래와 같은 식이 성립됩니다.</p>
+</blockquote>
+<p>$$ q_F(w) = q_E(w) $$</p>
+<p>ALAE는 adversarial strategy로 학습이 진행됩니다. 따라서 \( q(x)\) → \( P_D(x)\)가 되며 이는 \(q_E(x)\) → \(q_{E, D}(x)\)로 이동하는 것을 암시합니다.</p>
+</br>
+
+<h6 id="3-1-Matching-the-latent-space"><a href="#3-1-Matching-the-latent-space" class="headerlink" title="3-1) Matching the latent space"></a>3-1) Matching the latent space</h6><p>latenet space에 대한 가정은 \(q_E(w)\)의 output distribution이 \(q_F(w)\)의 input distribution과 유사하다는 점 입니다. 이 개념을 바탕으로 실제 학습을 진행할 때 두 분포간의 squared difference를 최소화 하는 방향으로 학습을 진행하게 됩니다.</p>
+</br>
+
+<p>일반적인 autoencoder에서 입력된 이미지와 Decoder에 의해 복원된 이미지를 이용하여reconstruction loss을 구할 때 사용된 loss는 <code>L2 loss</code> 입니다. L2 loss는 data space에서 연산이 이루어지만, human visual perception을 반영하지 않는다는 특징이 있습니다. 이러한 이유로 인해 autoencoder가 GAN과 같은 선명한 이미지를 생성할 수 없게 되는 이유 중 하나 입니다.</p>
+</br>
+
+<h5 id="4-Discriminator-D"><a href="#4-Discriminator-D" class="headerlink" title="4. Discriminator D"></a>4. Discriminator D</h5><p>Encoder에 의해 제공되는 intermediate latent space가 입력되며 진짜인지 가짜인지 판별해주는 역할을 하는 네트워크 입니다.</p>
+<p>D는 학습 과정에서 2번 호출됩니다.</p>
+<ul>
+<li>G에 의해 생성된 이미지 \(q_G(x\vert w, \eta)\)가 E를 통해 latent space mapping이 이루어지고, 그 latent space \( q_E(w)\)가 D에 제공되는 경우.</li>
+<li>실제 데이터 \( x\)가 E에 입력되고 그로 인해 나오는 출력이 D에 제공되는 경우.</li>
+</ul>
+<blockquote>
+<p>이건 그냥 일반적인 GAN 학습 방법에서 Discriminator 역할을 떠올리시면 됩니다.</p>
+</blockquote>
+<hr>
+<h2 id="StyleALAE"><a href="#StyleALAE" class="headerlink" title="StyleALAE"></a>StyleALAE</h2></br>
+
+<p>위 내용까지는 ALAE에 대한 특징 및 아키텍처에 대해 알아보았습니다. ALAE의 기본 아키텍처에다가 StyleGAN에 적용하여 StyleGAN과 거의 비슷한 성능을 보이는 StyleALAE 아키텍처에 대해 간단하게 알아보도록 하겠습니다.</p>
+<p><img src="/images/post_images/post0007/figure0010.png"> <center><em>그림 8. StyleALAE Architecture</em></center></p>
+<p>StyleALAE는 StyleGAN의 Generator 부분과 ALAE를 결합한 아키텍처 입니다. 따라서 StyleALAE는 다은과 같이 구성됩니다.</p>
+<ul>
+<li>(그림 9)와 같이 ALAE의 Generator가 StyleGAN의 Generator로 변경.</li>
+<li>style information을 추출하는 Encoder network E는 Generator와 대칭이 되도록 구성 됩니다.</li>
+</ul>
+<p><img src="/images/post_images/post0007/figure0011.png"> <center><em>그림 9</em></center></p>
+<p><strong>IN(Instance Normalization)</strong><br>각 레이어 \( i^{th} \)의 Style content를 추출하며, 입력된 영상에 대한 Normalization을 진행합니다.</p>
+<p><strong>Style Information</strong><br>IN에 의해 추출된 style content를 구성하는 channel-wise average \( \mu \)와 \( \sigma\)를 의미 합니다.</p>
+<p>Encoder는 \( i^{th}\)의 style content들은 latent space \( w\)와 선형적으로 관련된 symmetric generator(G of StyleALAE)의 AdaIN(Adaptive Instance Normalization) 으로 입력 됩니다. 따라서, Encoder의 각 레이어의 IN에 의해 추출된 style content는 multilinear map을 통해 latent space에 mapping 됩니다.</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2022/01/01/Dual-Contrastive-Learning-for-Unsupervised-Image-to-Image-Translation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="mulkong">
+      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mulkong DeepLearning">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/01/Dual-Contrastive-Learning-for-Unsupervised-Image-to-Image-Translation/" class="post-title-link" itemprop="url">Dual Contrastive Learning for Unsupervised Image-to-Image Translation</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">작성일</span>
+
+      <time title="Post created: 2022-01-01 18:59:13" itemprop="dateCreated datePublished" datetime="2022-01-01T18:59:13+09:00">2022-01-01</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Updated at: 2022-03-14 15:45:35" itemprop="dateModified" datetime="2022-03-14T15:45:35+09:00">2022-03-14</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <hr>
+<ul>
+<li>이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 <a target="_blank" rel="noopener" href="https://sensibilityit.tistory.com/522">Tistory</a>에서 보실 수 있습니다.</li>
+</ul>
+<hr>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><hr>
+<p><strong>Unsupervised image-to-image translation개념</strong><br>Unsupervised image-to-image translation tasks는 unpaired train data에서 source domain X와 target domain Y간의 mapping이 되는 지점을 찾는 것을 목표로 하는 task 입니다.</p>
+<p><strong>CUT(Contrastive Learning for unpaired image-to-image Translation)</strong><br>Contrastive Learning for unpaired image-to-image Translation은 두개의 도메인 (X, Y) 모두에 대해 하나의 Encoder만 사용하여 입력, 출력 패치(patch)의 mutual information을 최대화 하여 unsupervised image-to-image translation을 모델링 하는 SOTA 결과를 제공합니다.</p>
+<p><strong>제안한 방법</strong><br>본 논문에서는 unpaired data간의 효율적인 매핑을 위해 contrastive learning, dual learning setting에 기반한 새로운 학습 방법을 제안합니다.</p>
+<p><strong>mode collapse 문제 해결</strong><br>cycle consistency loss의 문제점들을 해결 하기 위해 self-supervised representation learning 분야에서 multiple views of the data 간의 contrastive learning을 이용한 CUT가 SOTA을 달성했지만 mode collapse 문제가 발생 합니다.</p>
+<p>🗣 DCLGAN은 데이터 도메인에 따라 mode collapse가 발생할 수 있다는 문제점이 존재하여 이를 해결하기 위해 DCLGAN의 변형인 SimDCL도 논문에서 소개를 하고 있습니다. </p>
+<p>이 논문에서 제안한 방법으로 mode collapse문제를 효율적으로 해결합니다.</p>
+<ul>
+<li>CUT: 1개의 Encoder 사용, 데이터에 따라 mode collapse 문제 발생</li>
+<li>DCLGAN: 2개의 Encoder 사용, mode collapse 문제를 효율적으로 해결</li>
+</ul>
+<p><strong>결론</strong><br>image-to-image translation tasks에서 extensive ablation study을 다른 네트워크들에 비해 본 논문에서 제안한 접근 방식이 효과적이라는 것을 본 논문에서 입증하고 있습니다.</p>
+<p>끝으로, unsupervised learning과 supervised learning 방법 사이의 격차를 효율적으로 줄일 수 있음을 보여주고 있습니다.</p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><hr>
+<p>image-to-image translation task는 이미지를 한 도메인에서 다른 도메인으로 변환하는 것을 목표로 합니다. 가장 일반적으로 사용하고 있는 방법은 GAN을 기반으로 하는 방법입니다.</p>
+<p>GAN이 발전하게 된 이유중 하나는 adversarial loss를 사용한점 입니다. 하지만 adversarial loss를 unpaired unsupervised image-to-image translation에 사용하여 발생되는 문제점은 adversarial loss가 underconstrained 하다는 점 입니다.</p>
+<p>🗣 <strong><em>adversarial loss가 underconstrained 하다면?</em></strong><br>💡 <em>두 도메인(X, Y) 사이에 여러개의 매핑이 존재하게 되어 네트워크 학습이 불안정하게 이루어집니다.</em></p>
+<p>그래서 위와 같은 문제를 해결하기 위해 unpaired unsupervised image-to-image translation 에서는 cycle consistency을 사용하여 adversarial loss만 사용했을때 발생되는 문제점을 해결했습니다.</p>
+<h2 id="Cycle-consistency"><a href="#Cycle-consistency" class="headerlink" title="Cycle consistency"></a>Cycle consistency</h2><p>cycle consistency loss는 *(그림 1)*처럼target Domain ➡️ source Domain으로 역방향 매핑을 학습할 때 사용하는 loss 입니다.</p>
+<p>🗣 <strong><em>역방향 매핑을 학습한다는 의미는?</em></strong><br>💡 <em>입력된 이미지와 재구성된 이미지가 얼마나 동일하게 만들어 지는지를 학습하는 의미이며 cycle consistency loss가 그 차이를 측정하며 학습을 하게 됩니다.</em></p>
+<p><img src="/images/post_images/post0006/figure0001.png"> <center><em>(그림 1). Cycle consistency loss</em></center></p>
+<p>하지만 cycle consistency을 사용할 때 약간의 가정과 제약이 있습니다.</p>
+<p>📌 <strong>cycle consistency의 가정</strong></p>
+<ul>
+<li>변환된 이미지는 target domain과 유사한 texture information을 가지므로 geometry 변경이 불가하다는 것을 가정으로 두고 cycle consistency를 사용합니다.</li>
+<li>두 도메인 (X, Y) 간의 관계가 bijection 되도록 즉, 1:1 대응이 되도록 합니다.</li>
+</ul>
+<p>📌 <strong>cycle consistency의 제약</strong></p>
+<ul>
+<li>그로 인해 정확도 손실로 인해 재구성 과정이 제한되므로재구성 이미지의 diversity가 감소하게 됩니다.</li>
+</ul>
+<p>그래서 이러한 제약을 해결하기 위해 Contrastive Learning을 이용한 연구가 등장을 하게 되었습니다.</p>
+<h2 id="Contrastive-Learning을-이용한-Image-to-Image-Translation"><a href="#Contrastive-Learning을-이용한-Image-to-Image-Translation" class="headerlink" title="Contrastive Learning을 이용한 Image-to-Image Translation"></a>Contrastive Learning을 이용한 Image-to-Image Translation</h2><p>cycle consistency loss는 재구성 이미지의 diversity가 감소하게 되는 등의 제약들이 발견되었습니다. 따라서 이를 해결하기 위해self-supervised representation learning 분야에서 multiple views of the data 간의 contrastive learning 방법이 이루어 졌습니다.</p>
+<p>이 방법이 기존 cycle consistency loss을 사용한 방법의 제약을 효율적으로 해소함을 보여줌과 동시에 SOTA를 달성하게 되었습니다.</p>
+<p>가장 최근에 나온 논문 중 대표적인 논문으로<code>CUT(Contrastive Learning for Unpaired Image-to-Image Translation)</code>이 있습니다. CUT는 <code>unpaired image-to-image translation taks에서 contrastive learning 방식이 효율적</code>이라는 것을 보여주었으며, <code>patch-based multi-layer PatchNCE loss</code>을 사용하여 <code>unpaired image-to-image translation을 위한 Contrastive Learning을 도입하여 입력 및 출력 이미지의 패치간의 mutual information을 최대화 하는 방향으로 학습</code>이 이루어지게 됩니다.</p>
+<p>하지만 SOTA를 찍은CUT도 문제점이 보였습니다. 그 문제점은 바로 아이디어는 좋았지만 <code>두 도메인 (X, Y) 사이의 domain gap을 효율적으로 포착하지 못하여 충분히 성능을 끌어올리지 못하고 있다는 점</code> 입니다.</p>
+<p>🗣 <strong><em>그럼, 왜 성능을 충분히 끌어 올리지 못했을까요?</em></strong><br>💡 <em>그 이유는 바로 CUT에서 사용한 아키텍처의 특정 부분의 디자인을 잘못 선택해서 성능이 떨어지게 되었습니다.</em></p>
+<p>domain gap을 효율적으로 포착하기 위해서는 도메인 수 만큼 임베딩이 사용되어야 합니다. 하지만 CUT는 하나의 임베딩이 사용되어 성능을 제한하고 있다고 본 논문에서 주장을 하고 있습니다.</p>
+<p>그래서 본 논문에서는 cycle-consistency의 제약을 피하고, domain gap을 효율적으로 포착할 수 있도록 한개 이상의 임베딩을 사용하고, contrastive learning 방법을 더욱 활용한 DCLGAN을 제안합니다.</p>
+<h2 id="DCLGAN"><a href="#DCLGAN" class="headerlink" title="DCLGAN"></a>DCLGAN</h2><hr>
+<p><img src="/images/post_images/post0006/figure0002.gif"> <center><em>(그림 2). Contrastive Learning for Unpaired Image-to-Image Translation(CUT) 논문의 Patch-wise Contrastive Learning for one-sided translation</em></center></p>
+<p>📌 <strong>목표</strong><br>DCLGAN의 목표는 별도의 임베딩을 사용하여 입력 및 출력 이미지 패치의 상관관계를 학습하여 mutual information을 극대화 하는 것을 목표로 합니다.</p>
+<p>📌 <strong>학습 방법</strong><br>DCLGAN은 CUT의 성능을 제한시킨 디자인인 1개의 임베딩을 사용하는 점을 개선시켜 서로 다른 도메인에 서로 다른 Encoder 및 projection heads를 사용함으로써 두 도메인 간의 접점이 되는 부분을 극대화 시키기 위한 1개 이상의 임베딩을 학습합니다.</p>
+<p>📌 <strong>발견한점</strong></p>
+<ul>
+<li>CUT과 달리 DCLGAN의 학습 방법은 dual learning 방식 입니다. 이 방식이 오히려 학습을 안정화 시키는데 도움이 된다고 합니다.</li>
+<li>또한 CUT에서 사용한 PatchNCE loss에서 RGB pixel을 제거하는 것이 학습하는대에 있어 도움이 될 수 있음을 발견했습니다.</li>
+<li>geometrical structure에 대한 제약이 없는 경우에는 cycle-consistency가 불필요 하다는 점도 발견했습니다.</li>
+<li>DCLGAN은 데이터 도메인에 따라 mode collapse가 발생될 수 있지만 그 변형인 SimDCL은 mode collapse를 방지하는데 효과적인 점을 발견했습니다.</li>
+</ul>
+<p><img src="/images/post_images/post0006/figure0003.png"> <center><em>(그림 3). DCLGAN architecture</em></center></p>
+<h2 id="정리"><a href="#정리" class="headerlink" title="정리"></a>정리</h2><hr>
+<p>본 눈문은 CycleGAN과 CUT의 한계를 극복할 수 있는 새로움 프레임 워크와 변형 네트워크를 제시하고 있습니다.</p>
+<h3 id="CycleGAN"><a href="#CycleGAN" class="headerlink" title="CycleGAN"></a>CycleGAN</h3><p>cycle consistency으로 발생하는 단점.</p>
+<h3 id="CUT"><a href="#CUT" class="headerlink" title="CUT"></a>CUT</h3><p>contrastive learning의 효율성을 보여주었지만 한개의 임베딩을 사용해서 domain gap을 효율적으로 포착하지 못할 수 있다는 한계점.<br>또한 여러가지 다양한 실험을 통해 SOTA에 비해 본 논문에서 제안한 방식이 훨씬 효과적이라는 점을 입증하게 되었으며, self-supervised learning 분야에서 contrastive learning 방법이 그랬던것 처럼 unsupervised and supervised learning 방법 사이의 격차를 성공적으로 좁힐 수 있다는 점을 보여주고 있습니다.</p>
+<h1 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h1><hr>
+<h2 id="Supervised-methods"><a href="#Supervised-methods" class="headerlink" title="Supervised methods"></a>Supervised methods</h2><p>📌 관련 논문: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1611.07004">Pix2Pix</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1711.11585.pdf">Pix2PixHD</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1903.07291">SPADE</a></p>
+<h3 id="Pix2Pix"><a href="#Pix2Pix" class="headerlink" title="Pix2Pix"></a>Pix2Pix</h3><p>general methods만 사용하여 여러개의 image-to-image translation tasks을 지원하는 작업에 구애받지 않는 image translation을 처음 수행한 논문 입니다.</p>
+<h3 id="Pix2PixHD"><a href="#Pix2PixHD" class="headerlink" title="Pix2PixHD"></a>Pix2PixHD</h3><p>기존 Pix2Pix 논문에서 확장된 방법으로, 고해상도 이미지를 합성할 수 있는 방법 입니다.</p>
+<h3 id="SPADE"><a href="#SPADE" class="headerlink" title="SPADE"></a>SPADE</h3><p>생성된 이미지의 품질을 더욱 향상 시키기 위해 spatially-adaptive normalization layer을 도입한 논문입니다.<br>😱 단점: supervised 접근 방법은 학습을 위해 paired data가 필요합니다.</p>
+<h2 id="Unsupervised-methods"><a href="#Unsupervised-methods" class="headerlink" title="Unsupervised methods"></a>Unsupervised methods</h2><p>📌 관련 논문: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1804.04732">MUNIT</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1808.00948">DRIT</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.09020">StarGAN</a><br>비지도 학습 방법은 주로 shared latent space, cycle-consistency assumption을 가정을 두고 있습니다.</p>
+<h3 id="MUNIT"><a href="#MUNIT" class="headerlink" title="MUNIT"></a>MUNIT</h3><p>latent space을 style code &amp; content code로 분리하여 domain-specific features를 분리하는 특징이 있는 논문 입니다.</p>
+<h3 id="DRIT"><a href="#DRIT" class="headerlink" title="DRIT"></a>DRIT</h3><p>domain-specific attribute space and shared information을 포착하는 content space을 포함한 두 space에서 이미지 임베딩을 하는 논문 입니다.</p>
+<h3 id="StarGAN"><a href="#StarGAN" class="headerlink" title="StarGAN"></a>StarGAN</h3><p>대표적인 multi domain image-to-image translation 으로, unified model architecture을 사용하여 여러 도메인에서 이미지를 translation 하는 논문 입니다.</p>
+<h2 id="Break-the-cycle"><a href="#Break-the-cycle" class="headerlink" title="Break the cycle"></a>Break the cycle</h2><p>📌 관련 논문: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1703.10593">CycleGAN</a>, <a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Nizan_Breaking_the_Cycle_-_Colleagues_Are_All_You_Need_CVPR_2020_paper.pdf">CouncilGAN</a>, <a target="_blank" rel="noopener" href="https://papers.nips.cc/paper/2017/file/59b90e1005a220e2ebc542eb9d950b1e-Paper.pdf">DistanceGAN</a>, <a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_CVPR_2019/papers/Fu_Geometry-Consistent_Generative_Adversarial_Networks_for_One-Sided_Unsupervised_Domain_Mapping_CVPR_2019_paper.pdf">GCGAN</a></p>
+<h3 id="CycleGAN-1"><a href="#CycleGAN-1" class="headerlink" title="CycleGAN"></a>CycleGAN</h3><p>대표적인 unpaired data image-to-image translation으로 cycle-consistency loss을 사용하여 adversairal loss의 문제인 mode collapse 단점을 극복하기 위한 네트워크로, 입력 이미지를 target domain으로 변환하고 입력 및 생성된 이미지의 정확도를 유지하며 두개의 매핑을 동시에 학습하는 네트워크 입니다.</p>
+<p>하지만 cycle-consistency의 문제를 완화하기 위해 break the cycle을 시도하고 있으며 대표적인 네트워크가 CUT 입니다.</p>
+<h3 id="CouncilGAN"><a href="#CouncilGAN" class="headerlink" title="CouncilGAN"></a>CouncilGAN</h3><p>council loss와 함께 두개 이상의 Generator, Discriminator을 사용합니다.</p>
+<p><code>본 논문에서는 CycleGAN, CUT의 장점을 모두 활용합니다. 특히 mutual information maximization을 통해 cycleGAN 아키텍처를 기반으로 한 양방향 unsupervised image-to-image translation이 가능하도록 합니다.</code></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/12/26/2021%E1%84%82%E1%85%A7%E1%86%AB-%E1%84%92%E1%85%AC%E1%84%80%E1%85%A9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="mulkong">
+      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mulkong DeepLearning">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/26/2021%E1%84%82%E1%85%A7%E1%86%AB-%E1%84%92%E1%85%AC%E1%84%80%E1%85%A9/" class="post-title-link" itemprop="url">2021년 회고</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">작성일</span>
+      
+
+      <time title="Post created: 2021-12-26 23:08:24 / Updated at: 23:31:50" itemprop="dateCreated datePublished" datetime="2021-12-26T23:08:24+09:00">2021-12-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Diary/" itemprop="url" rel="index"><span itemprop="name">Diary</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
     <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/12/26/MemAE-Memorizing-Normality-to-Detect-Anomaly-Memory-augmented-Deep-Autoencoder-for-Unsupervised-Anomaly-Detection/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -269,7 +707,7 @@
       <span class="post-meta-item-text">작성일</span>
       
 
-      <time title="Post created: 2021-12-26 19:10:20 / Updated at: 19:35:43" itemprop="dateCreated datePublished" datetime="2021-12-26T19:10:20+09:00">2021-12-26</time>
+      <time title="Post created: 2021-12-26 19:10:20 / Updated at: 19:35:42" itemprop="dateCreated datePublished" datetime="2021-12-26T19:10:20+09:00">2021-12-26</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -407,7 +845,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
-    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/12/25/GAN%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%ED%9A%A8%EC%9C%A8%EC%A0%81%EC%9D%B8-Anomaly-Detection-%EB%B0%A9%EB%B2%95-f-AnoGAN-vs-MemAE/">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/12/25/GAN%E1%84%8B%E1%85%B3%E1%86%AF-%E1%84%8B%E1%85%B5%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%92%E1%85%A1%E1%86%AB-%E1%84%92%E1%85%AD%E1%84%8B%E1%85%B2%E1%86%AF%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%B5%E1%86%AB-Anomaly-Detection-%E1%84%87%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A5%E1%86%B8-f-AnoGAN-vs-MemAE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -421,7 +859,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/25/GAN%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%ED%9A%A8%EC%9C%A8%EC%A0%81%EC%9D%B8-Anomaly-Detection-%EB%B0%A9%EB%B2%95-f-AnoGAN-vs-MemAE/" class="post-title-link" itemprop="url">GAN을 이용한 효율적인 Anomaly Detection 방법 [f-AnoGAN vs MemAE]</a>
+            <a href="/2021/12/25/GAN%E1%84%8B%E1%85%B3%E1%86%AF-%E1%84%8B%E1%85%B5%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%92%E1%85%A1%E1%86%AB-%E1%84%92%E1%85%AD%E1%84%8B%E1%85%B2%E1%86%AF%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%B5%E1%86%AB-Anomaly-Detection-%E1%84%87%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A5%E1%86%B8-f-AnoGAN-vs-MemAE/" class="post-title-link" itemprop="url">GAN을 이용한 효율적인 Anomaly Detection 방법 [f-AnoGAN vs MemAE]</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1015,7 +1453,7 @@ Discriminator의 역할은 True/False를 판별해주는 역할을 갖고 있습
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
