@@ -193,18 +193,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">포스트</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">카테고리</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">태그</span>
       </div>
   </nav>
@@ -494,80 +494,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
-    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/12/26/2021%E1%84%82%E1%85%A7%E1%86%AB-%E1%84%92%E1%85%AC%E1%84%80%E1%85%A9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="mulkong">
-      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mulkong DeepLearning">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/26/2021%E1%84%82%E1%85%A7%E1%86%AB-%E1%84%92%E1%85%AC%E1%84%80%E1%85%A9/" class="post-title-link" itemprop="url">2021년 회고</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">작성일</span>
-      
-
-      <time title="Post created: 2021-12-26 23:08:24 / Updated at: 23:31:50" itemprop="dateCreated datePublished" datetime="2021-12-26T23:08:24+09:00">2021-12-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Diary/" itemprop="url" rel="index"><span itemprop="name">Diary</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
     <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/12/26/MemAE-Memorizing-Normality-to-Detect-Anomaly-Memory-augmented-Deep-Autoencoder-for-Unsupervised-Anomaly-Detection/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -693,7 +619,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Updated at: 2021-12-26 19:06:12" itemprop="dateModified" datetime="2021-12-26T19:06:12+09:00">2021-12-26</time>
+        <time title="Updated at: 2022-04-17 19:04:22" itemprop="dateModified" datetime="2022-04-17T19:04:22+09:00">2022-04-17</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -726,200 +652,14 @@
 <li><a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S1361841518302640">f-AnoGAN:Fast unsupervised anomaly detection with generative adversarial networks</a></li>
 <li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1904.02639">MemAE:Memorizing Normality to Detect Anomaly: Memory-augmented Deep Autoencoder for Unsupervised Anomaly Detection</a></li>
 </ul>
-<hr>
-<h1 id="f-AnoGAN"><a href="#f-AnoGAN" class="headerlink" title="f-AnoGAN"></a>f-AnoGAN</h1><p><strong>참고 링크</strong></p>
-<ul>
-<li>blog.promedius.ai/f-anogan-fast-unsupervised-anomaly-detection-with-gan/</li>
-</ul>
-<p><strong>Github tutorial</strong></p>
-<ul>
-<li>github.com/mulkong/f-AnoGAN_with_Pytorch</li>
-</ul>
-<p>f-AnoGAN의 학습 방법은 GAN 학습, Encoder 학습으로 총 2가지 step으로 이루어집니다.</p>
-<img src="/images/post_images/post0004/figure_0001.png" width="100%" height="100%">
-
-<hr>
-<h2 id="GAN-학습"><a href="#GAN-학습" class="headerlink" title="GAN 학습"></a>GAN 학습</h2><p>정상 데이터로만 GAN 학습을 진행합니다. GAN이 잘 학습이 되었다면 정상 데이터에 대한 학습 분포를 기반으로 학습이 이루어져 정상 이미지만을 생성할 가능성이 높아집니다.</p>
-<h2 id="Encoder-학습"><a href="#Encoder-학습" class="headerlink" title="Encoder 학습"></a>Encoder 학습</h2><p>GAN이 잘 학습 된 상태라면 이제 입력된 query data에 대해 Latent space mapping을 위한 Encoder 모델 학습을 진행합니다.</p>
-<p>이와 같은 방식으로 진행한 이유는 query data(정상/비정상) 중 정상 데이터가 입력되면  Encoder을 통해서 정상 query data에 대해 latent space mapping된 Z값을 이용하여 Generator에 Z가 입력되게 됩니다. 그러면 Generator는 query data에 대한 정상 데이터를 생성하게 됩니다.</p>
-<p>반면 비정상 query data가 입력으로 주어지면 Encoder는 query data에 대한 Feature을 추출해서 Z값으로 만든 후 비정상 query data의 Feature을 Generator에 입력으로 주어지면 query data을 기반으로 한 이미지가 생성됩니다.</p>
-<p>GAN은 정상 이미지로만 학습이 진행되어 정상 이미지만을 생성하려고 할 것 입니다. 따라서 비정상 query data의 모양, 질감, 형태와 동일하지만 정상 상태로 이미지를 생성하게 되어 이상 탐지(anomaly detecTion)을 수행합니다.</p>
-<h3 id="단점"><a href="#단점" class="headerlink" title="단점"></a>단점</h3><p>일반적으로 AutoEncoder을 이용한 Anomaly Detection을 진행하다보면 AutoEncoder의 특성상 일반화(Generalization)을 너무 잘 해서 정상만 생성하도록 해야하는데 비정상까지 재구성하게 되어 미세한 결함을 제대로 찾기 힘들다는 단점이 존재합니다.</p>
-<h3 id="해결책"><a href="#해결책" class="headerlink" title="해결책"></a>해결책</h3><p>memory module을 사용하여 AutoEncoder을 augment(보강)하는 MemAE(memory-augmented autoencoder) 방법을 사용.</p>
-<hr>
-<h1 id="MemAE"><a href="#MemAE" class="headerlink" title="MemAE"></a>MemAE</h1><p>MemAE의 핵심 내용은 AutoEncoder가 너무 general하게 학습 되는 경우가 발생하여 정상 뿐만 아니라 간혹 비정상의 결함 부분 까지 포함하여 생성하게 된다는 단점이 존재하니 이를 해결하기 위해 정상 데이터을 Encoding할 때 정상 데이터에 대한 memory을 얻은 후 이를 기반으로 해서 정상 데이터를 생성하는 방법입니다.</p>
-<img src="/images/post_images/post0004/figure_0002.png" width="100%" height="100%">
-
-<p>학습 단계에서 memory는 정상 데이터에 가장 관련성이 높은 메모리 항목을 검색하며 데이터를 생성(재구성)하게 됩니다. 테스트 과정시 정상 데이터에 가장 관련성이 높은 메모리를 고정시킨 후 query data가 입력으로 주어지면 query data을 기반으로 한 정상 데이터를 메모리 기록으로 부터 검색을한 후 이를 기반으로 생성(재구성)이 이루어지게 됩니다.</p>
-<hr>
-<p>다음 포스팅할 글은 MemAE 논문에 대해 정리한 글을 작성하도록 하겠습니다.</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
-    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/12/24/Improved%20anomaly%20detection%20by%20training%20an%20autoencoder%20with%20skip%20connections%20on%20images%20corrupted%20with%20stain%20shaped%20noise/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="mulkong">
-      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mulkong DeepLearning">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/24/Improved%20anomaly%20detection%20by%20training%20an%20autoencoder%20with%20skip%20connections%20on%20images%20corrupted%20with%20stain%20shaped%20noise/" class="post-title-link" itemprop="url">[Anomaly Detection] Improved anomaly detection by training an autoencoder with skip connections on images corrupted with Stain-shaped noise</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">작성일</span>
-      
-
-      <time title="Post created: 2021-12-24 21:44:10 / Updated at: 21:45:32" itemprop="dateCreated datePublished" datetime="2021-12-24T21:44:10+09:00">2021-12-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <hr>
-<ul>
-<li>이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 <a target="_blank" rel="noopener" href="https://sensibilityit.tistory.com/517">Tistory</a>에서 보실 수 있습니다.</li>
-<li>Paper 원문: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2008.12977">Improved anomaly detection by training an autoencoder with skip connections on images corrupted with Stain-shaped noise</a></li>
-</ul>
-<hr>
-<h1 id="1-Abstract"><a href="#1-Abstract" class="headerlink" title="1.Abstract"></a>1.Abstract</h1><h3 id="산업-현장에서-AE를-활용한-Anomaly-Detection"><a href="#산업-현장에서-AE를-활용한-Anomaly-Detection" class="headerlink" title="산업 현장에서 AE를 활용한 Anomaly Detection"></a>산업 현장에서 AE를 활용한 Anomaly Detection</h3><p>Industrial vision에서 Anomaly Detection problems은 결함이 있거나 없는 arbitrary image를 clean image에서 mapping하도록 훈련된 AutoEncoder를 사용하여 해결할 수 있습니다.</p>
-<h3 id="skip-connections이-있는-AutoEncoder-AES-를-사용한-이유"><a href="#skip-connections이-있는-AutoEncoder-AES-를-사용한-이유" class="headerlink" title="skip-connections이 있는 AutoEncoder(AES)를 사용한 이유"></a>skip-connections이 있는 AutoEncoder(AES)를 사용한 이유</h3><p>이 접근 방식에서 Anomaly Detection과정은 개념적으로 본다면 reconstruction residual 또는 reconstruction uncertainty에 의존합니다. 공통적으로 sharpness of the reconstruction를 높이기 위해 skip-connections이 있는 AutoEncoder를 고려하게 되었습니다.</p>
-<h3 id="AES-Stain-noise-model-제안"><a href="#AES-Stain-noise-model-제안" class="headerlink" title="AES + Stain noise model 제안"></a>AES + Stain noise model 제안</h3><p>Reconstruction 과정 중 clean image가 나오게끔 하기 위해서 train image의 Clean image만 학습으로 진행하는 전략은, reconstruction을 담당하는 Network가 입력하는 대로 출력을 해버리는 identity mapping으로 수렴 되는것을 방지하기 위해 Noise model로 train image를 손상시키고 출력으로 Clean image가 나오도록 하는 목적으로 Stain noise model을 추가 할 것을 제안합니다.</p>
-<h3 id="우리가-사용한-모델-짱짱👍-→-AES-Stain-model"><a href="#우리가-사용한-모델-짱짱👍-→-AES-Stain-model" class="headerlink" title="우리가 사용한 모델 짱짱👍 → AES+Stain model"></a>우리가 사용한 모델 짱짱👍 → AES+Stain model</h3><p>이 모델을 실제 결함 모양에 관계없이 임의의 실제 이미지에서 깨끗한 이미지를 재구성 하는 데 유리하다는 것을 보여줍니다.</p>
-<h3 id="우리가-가라로-안했다는것을-증명하기-위해-이런-데이터셋으로-진행했다"><a href="#우리가-가라로-안했다는것을-증명하기-위해-이런-데이터셋으로-진행했다" class="headerlink" title="우리가 가라로 안했다는것을 증명하기 위해 이런 데이터셋으로 진행했다"></a>우리가 가라로 안했다는것을 증명하기 위해 이런 데이터셋으로 진행했다</h3><p>우리의 접근 방식의 관련성을 입증하는 것 외에도 우리의 검증은 pixel-wise및 image-wise anomaly detection을 위해 MVTec AD dataset에 대한 성능을 비교하여 reconstruction-based 방법에 대한 일관된 평가를 제공합니다.</p>
-<hr>
-<h1 id="2-Methods"><a href="#2-Methods" class="headerlink" title="2.Methods"></a>2.Methods</h1><h3 id="Anomaly-Detection-개요"><a href="#Anomaly-Detection-개요" class="headerlink" title="Anomaly Detection 개요"></a>Anomaly Detection 개요</h3><p>Anomaly detection은 Clean(Normal) data의 Distribution에 속하지 않는 다른 데이터들을 식별하는 작업으로 정의할 수 있습니다.</p>
-<h3 id="Supervised-Learning으로-하는-Anomaly-Detection의-문제점"><a href="#Supervised-Learning으로-하는-Anomaly-Detection의-문제점" class="headerlink" title="Supervised Learning으로 하는 Anomaly Detection의 문제점"></a>Supervised Learning으로 하는 Anomaly Detection의 문제점</h3><p>Clean(Normal) data에 비해 Defective(Abnormal) data를 수집하는 것은 한계가 있고 만들다 하더라도 Data Imbalance가 발생합니다.</p>
-<p>본 논문은 Unsupervised Learning으로 Anomaly Detection을 해결하는 논문입니다. 다만 이전에 정리했었던 AnoGAN, f-AnoGAN와의 차이점은 Query image가 입력으로 들어오면 그것을 구조는 동일하지만 Normal image로 image generation해주는 방법으로 GAN을 사용했습니다. 그러나 이 논문은 GAN이 mode collapse의 문제점을 지적하고 image generation 해주는 대신 image reconstruction 해주는 AutoEncoder 구조를 사용했습니다.</p>
-<p>🤔 <strong><em>제 생각이지만 해당 저자는 f-AnoGAN과 AnoGAN의 방법만 인용했지, GAN 모델을 수정한 노력은 없어 보였습니다. 그래서 High resolution을 잘 생성해주는 GAN 모델들을 이용하면 mode collapse 문제는 많이 없어질텐데…좀 아쉽네요</em></strong></p>
-<hr>
-<h1 id="3-Training-Step"><a href="#3-Training-Step" class="headerlink" title="3.Training Step"></a>3.Training Step</h1><img src="/images/post_images/post0003/figure_0001.png" width="100%" height="100%">
-
-<p>위 이미지는 Unsupervised Learning 방법으로 Anomaly Detection 하는 전체 Architecture framework를 보여주고 있습니다.</p>
-<h3 id="Blue-box"><a href="#Blue-box" class="headerlink" title="Blue box"></a>Blue box</h3><p>위 모델의 구조를 살펴보고 해석 해보도록 하겠습니다. 일단 Blue box를 보시면 GAN 같은 경우 Normal image를 generation 해주는 용도로 사용이 되지만, 여기서는 <code>Skip-connections를 사용한 AutoEncoder(AES) 모델을 사용해서 입력 이미지로 query image가 들어오면 그것을 어떤 이미지가 들어오든 Normal image로 reconstruction 해주는 방법</code>입니다. </p>
-<p>Stain Model을 사용한 이유는 AutoEncoder는 입력 이미지가 들어오면 그것을 그대로 복원해주는 성질이 있습니다. 근데 Denoising AutoEncoder를 생각해보면 noise가 있는 입력 이미지가 들어오면 그것을 선명한 이미지로 reconstruction해주는 성질이 있어서 일반 AutoEncoder를 사용할때 보다 더 선명하게 reconstruction 해주는 경향이 있습니다. </p>
-<p>마찬가지로 해당 논문에서는 얼룩 무늬를 추가해주는 Stain noise model을 이용해서 입력 이미지를 결함이 있는 이미지로 만들어줘서 다시 깨끗한 이미지로 복원될 수 있도록 하는 역할을 가지고 있습니다. 즉, Identity mapping이 안되도록 방지해주기 위해 Stain noise model을 사용하는 것 입니다.</p>
-<p>좀 더 자세히 모델을 살펴보도록 하겠습니다.</p>
-<img src="/images/post_images/post0003/figure_0002.png" width="100%" height="100%">
-
-<p>이 논문에서 사용한 데이터 크기는 256x256인 오직 Clean(Normal) Image로 학습되었습니다. 여기서 위 이미지(AE skip-connection architecture)처럼 <code>bottleneck 구조를 갖는 Skip-connection 을 사용함으로 써 model에 projection한 임의의 이미지로부터 좀 더 선명한 이미지가 reconstruction</code> 된다고 합니다.</p>
-<p>AESc(AE skip-connection) 모델 구조를 보면 U-Net과 모양이 비슷하다는 생각이 자연스럽게 들게 됩니다. 그래서 한번 U-Net과 AESc를 비교 해보았습니다.</p>
-<h2 id="3-1-AESc-vs-U-Net"><a href="#3-1-AESc-vs-U-Net" class="headerlink" title="3-1. AESc vs U-Net"></a>3-1. AESc vs U-Net</h2><img src="/images/post_images/post0003/figure_0003.png" width="100%" height="100%">
-
-<h3 id="Autoencoder"><a href="#Autoencoder" class="headerlink" title="Autoencoder"></a>Autoencoder</h3><p>Autoencoder는 <code>입력 이미지에서 핵심 Feature들만 뽑는 구조</code>이며 Bottleneck을 갖고 있습니다. Bottleneck 구조를 갖는 모델은 Image-to-Image translation tasks에서 많이 사용되는 구조이며 <code>결과 이미지의 형태들이 급진적으로 변화하는 특징</code>을 갖고있습니다.</p>
-<h5 id="Bottleneck-구조를-갖는-AutoEncoder-구조의-장단점"><a href="#Bottleneck-구조를-갖는-AutoEncoder-구조의-장단점" class="headerlink" title="Bottleneck 구조를 갖는 AutoEncoder 구조의 장단점"></a>Bottleneck 구조를 갖는 AutoEncoder 구조의 장단점</h5><ul>
-<li>장점: Bottleneck 구조는 갖고 있어서 핵심 Feature를 추출해낼 수 있으며 Domain이 다른 이미지로 변형을 하고 싶을 때 적합하다.</li>
-<li>단점: 생성(복원)된 이미지의 Detail이 떨어진다.</li>
-</ul>
-<h5 id="Bottleneck-구조를-갖는-AutoEncoder를-사용한-이유"><a href="#Bottleneck-구조를-갖는-AutoEncoder를-사용한-이유" class="headerlink" title="Bottleneck 구조를 갖는 AutoEncoder를 사용한 이유"></a>Bottleneck 구조를 갖는 AutoEncoder를 사용한 이유</h5><p>추가적으로 Bottleneck 구조를 갖는 AutoEncoder를 사용한 이유는 Anomaly Detection tasks에서 defective structures를 image distribution에서 제외하는 것은 반복적으로 발생하는 문제라고 합니다. 그래서 Bottleneck 구조를 갖는 AE로 Feature map을 압축하는 과정은 Normal Image를 Manifold에 놓여지도록 reconstruction을 일반화 합니다.</p>
-<h3 id="Unet"><a href="#Unet" class="headerlink" title="Unet"></a>Unet</h3><p>U-Net 구조의 특징은 “Skip-connection이 잇다보니 입력된 영상에 대한 detail들이 마지막 layer 까지 잘 전달 된다는 특징”이 있습니다. 그래서 아무래도 AutoEncoder의 결과와 비교해보면 output image quality가 더 좋습니다. 그렇지만 단점도 존재합니다. “Skip-connection은 depth가 거의 없다보니 depth가 어느정도 있는 다른 네트워크 구조에 비해 생성된 결과가 별로”라는 점 입니다. </p>
-<h5 id="U-Net-구조의-특징과-장단점"><a href="#U-Net-구조의-특징과-장단점" class="headerlink" title="U-Net 구조의 특징과 장단점"></a>U-Net 구조의 특징과 장단점</h5><ul>
-<li>특징: paired된 dataset이 어느정도 비슷한 컨텐츠들이 있는 경우 skip-connection을 많이 사용하는 경향을 보이고 있다.</li>
-<li>장점: 처음 detail들이 마지막 layer까지 잘 전달 된다.</li>
-<li>단점: skip-connection을 사용해서 depth가 거의 없다.</li>
-</ul>
-<h3 id="Bottleneck-구조를-갖는-AutoEncoder에-Skip-connection을-사용한-이유"><a href="#Bottleneck-구조를-갖는-AutoEncoder에-Skip-connection을-사용한-이유" class="headerlink" title="Bottleneck 구조를 갖는 AutoEncoder에 Skip-connection을 사용한 이유"></a>Bottleneck 구조를 갖는 AutoEncoder에 Skip-connection을 사용한 이유</h3><p>AE skip-connection architecture와 같이 Skip-connections을 사용하면 처음 detail들이 마지막 layer까지 전달되다 보니 reconstruction image가 보다 더 선명해 진다고 합니다. 근데 <code>U-Net에서 Skip-connection을 사용할때는 Decoder 구조에 feature map을 Concatenation</code>해서 사용했지만 해당 논문에선 <code>encoder에서 decoder로 feature map을 Addition</code> 시켜주었다고 합니다.</p>
-<p>red box에서 다시 설명을 하겠지만, Skip-connection이 없는 그냥 AE를 사용해서 얻은 reconstruction image를 query image랑 MSE로 loss를 구하면 reconstruction image가 나중에는 결국 blurry한 image로 reconstruction됩니다. 또한 reconstruction loss가 커지게 되어서 엽력 이미지랑 모양이 똑같은 이미지로 복원이 잘 안이루어지게 됩니다.</p>
-<h3 id="GAN-말고-AESc를-사용한-이유"><a href="#GAN-말고-AESc를-사용한-이유" class="headerlink" title="GAN 말고 AESc를 사용한 이유"></a>GAN 말고 AESc를 사용한 이유</h3><p>위에서도 언급한 내용으로 본 논문에서는 Clean(Normal) image를 복원 시키는 과정에서 GAN의 mode collapse 문제점을 지적하며 GAN 말고 Skip-connection을 사용한 AutoEncoder(AECs) 구조를 사용했습니다.</p>
-<p>Anomaly Detection은 Unsupervised Learning으로 접근하고 있으며 그중에 대표적인 방법 중 GAN을 사용 안하는 이유는 딱 3가지 입니다.</p>
-<ul>
-<li>mode collapse로 인해 학습 하기가 어렵다.</li>
-<li>generative distribution에서 결합 샘플을 제외 못함 -&gt; 이 문제는 AE에서 Bottleneck 구조로 해결.</li>
-<li>inference 과정시 query image의 distribution과 latent space에 속하는 가장 유하산 출력 이미지를 생성해야 하는 latent space 속의 latent vector를 찾기 위해서 추가적인 최적화 단계가 필요.</li>
-</ul>
-<p>비교를 위해 AnoGAN과 여기서 제안한 방법을 비교해보았는데 당연히(?) 이 논문에서 제안한 방법이 더 잘 나왔다 라는 결과가 나와서 GAN 사용 안하고 AES + Stain Model을 사용한 것 같습니다. </p>
-<p><strong><em>🤔 개인적으로 여기서 의문이 드는 점은 AnoGAN의 GAN Architecture는 DCGAN으로 이루어져 있습니다. DCGAN은 mode collapse를 방지할 수 없어서 개선된 모델들이 더 많이 나왔습니다. 근데 굳이 64x64 이미지로 학습을 진행한 AnoGAN과 비교를  하다니…. 의문점이 많다는 생각이 들었습니다.</em></strong></p>
-<img src="/images/post_images/post0003/figure_0004.png" width="100%" height="100%">
-
-<p>위 결과 그림은 AE와 AESc 모델 각각 Stain noise model를 추가한 것과 추가하기 전 reconstruction image 결과 비교한 그림입니다. AutoEncoder와 Skip-connections를 사용한 AutoEncoder 모델 각각 Identity mapping을 방지하기 위해 넣어준 Stain noise model과 아무것도 안넣어준 경우의 reconstruction image의 결과를 비교한 그림입니다. <code>None의 경우 Identity mapping이 이루어져서 입력 이미지 그대로 출력되어 제대로 결측인 부분들은 감지하지 못합니다. 그러나 Stain noise model을 추가한 결과를 보면 Identity mapping을 방지해서 결함이 있는 이미지가 들어오더라도 구조는 동일하게 가지만 정상인 이미지로 reconstruction</code>하는 것을 볼 수 있습니다. 다만 <code>skip connections을 사용하지 않아서 AE기반인 모델들은 이미지가 blurry</code>하게 나오는 것을 볼 수 있습니다.</p>
-<p>AESc를 보면  AE와는 다르게 image가 선명하게 복원되는 것을 볼 수 있으며  Stain model을 사용한 결과가 Identity mapping이 안이루어진 모습을 확인할 수 있습니다.</p>
-<hr>
-<p>위에서 설명한 Train 과정에서 있는 중요 내용들을 요약하면 다음과 같습니다.</p>
-<ul>
-<li><p>GAN의 mode collapse 문제로 AutoEncoder 구조를 사용해서 Normal Image를 reconstruction 하도록 진행.</p>
-</li>
-<li><p>AE는 Bottleneck 구조를 갖는다. 따라서 Feature map을 압축하는 과정이 Normal Image Manifold에 놓여지도록 reconstruction을 일반화 시킬 수 있다.</p>
-</li>
-<li><p>AutoEncoder만 사용하면 Identity mapping이 발생되므로 Stain noise model을 사용했다.</p>
-</li>
-<li><p>AutoEncoder에 Skip-connections을 추가하므로 써 reconstruction image가 blurry하게 복원 되는 것을 방지했으며 U-Net과의 차이점은 concatenation 말고 Addition 시켜주었다는 점이다</p>
-</li>
-</ul>
-<hr>
-<hr>
-<h1 id="4-Test-Step"><a href="#4-Test-Step" class="headerlink" title="4.Test Step"></a>4.Test Step</h1><h3 id="Red-box"><a href="#Red-box" class="headerlink" title="Red box"></a>Red box</h3><p>red box에 있는 내용은 test data를 이용해서 inference하는 과정입니다. 여기서 눈여겨 볼 점은 inference할 때 두가지의 전략(<code>Residual-based detection과 Uncertainity-based detection</code>)으로 진행 했습니다.</p>
-<h2 id="4-1-Residual-based-Detection"><a href="#4-1-Residual-based-Detection" class="headerlink" title="4-1. Residual-based Detection"></a>4-1. Residual-based Detection</h2><p>Test과정 중 Query image랑 Query image를 기반으로 Clean(Normal) image로 reconstruction된 image와 차이를 계산하는 것 입니다. 이때 사용되는 loss는 L2Norm(MSE)이고, Image-wise 관점과 Pixel-wise 관점에서 이루어 집니다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">• residual(잔차)</span><br><span class="line">→  모집단에서 추출한 표본둘의 평균(표본평균)과 개별 표본갑 간의 &#39;편차&#39;를 말하지만 주로 &#39;추정오차 (Estimation Error)&#39;와 거의 같음 의미를 지닌다.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">• 추정 오차 (Estimation Error)</span><br><span class="line">→  표본 집단에 기초해 산출된 기대값(추정값)과 확률 시행 결과의 관측값 과의 차이.</span><br></pre></td></tr></table></figure>
-
-<h3 id="Residual-baded-detection의-단점과-MCDropout-사용-이유"><a href="#Residual-baded-detection의-단점과-MCDropout-사용-이유" class="headerlink" title="Residual-baded detection의 단점과 MCDropout 사용 이유"></a>Residual-baded detection의 단점과 MCDropout 사용 이유</h3><p>Anomaly Detection 하고싶은 부분 말고 <code>나머지 뒷 배경과의 대조가 명확하지 않은 경우</code>. Normal Image로 Reconstruction을 해도 reconstruction loss가 충분하게 높지 않게 됩니다. 따라서 <code>MCDropout을 사용해서 prediction uncertainity을 정량화 하여 anomaly detection에 사용</code>합니다.</p>
-<h2 id="4-2-Uncertainty-based-Detection"><a href="#4-2-Uncertainty-based-Detection" class="headerlink" title="4-2. Uncertainty-based Detection"></a>4-2. Uncertainty-based Detection</h2><p>Uncertainity-based detection 방법은 Bayesian Estimation에서 나온 개념입니다. <code>Uncertainty(불확실성)는 확률 변수의 분산 크기이며 확률 변수가 얼마나 random한지 측정하는 sclar값</code> 입니다. 그래서 해당 값은 Bayesian Model을 이용한 Estimation에서 확인할 수 있는데 Bayesian Model의 parameter 수가 많아서 model이 많이 무겁다고 합니다. 그래서 이와 비슷한 효과를 주는 방법에서 <code>Uncertainity를 정량화 하는 방법으로 MCDropout(Monte Carlo Dropout)을 사용해서 Uncertainity를 정량화</code> 한다고 합니다.</p>
-<p>그래서 <code>MCDropout으로 추정한 30개의 output image 사이의 variance(분산)으로 추정할 때 훈련중에 볼 수 없는 structures, 즉, 이상징후가 더 높은 불확실성(uncertainties)과 상관성을 갖는 직관에 의존하는 방법</code>입니다. 그래서 해당 논문에서는 AutoEncoder의 layer가 깊어질수록 dropout level 을 증가하면서 [0, 0, 10, 20, 30, 40] 적용한 결과 더 정확한 검출이 얻어지는 것을 밝혀냈다고 합니다.</p>
-<img src="/images/post_images/post0003/figure_0005.png" width="100%" height="100%">
-
-<p>위 그림은 reconstruction residual가 대부분 uncertainty와 상관관계가 있음을 보여주는 그림 입니다. 첫번째, 두번째 행은 Stain noise model을 사용하지 않고 AE and AECs networks를 학습한 경우이고 세번째, 네번째 행은 Stain noise model을 사용한 경우입니다. 두가지 경우 공통적으로 test 할 때 MCDropout을 사용 안한 상태로 Residual-based detection과 Uncertainty-based detection한 결과를 나타내고 있습니다. </p>
-<h3 id="데이터셋-상황에-따른-Detection-방법-선택"><a href="#데이터셋-상황에-따른-Detection-방법-선택" class="headerlink" title="데이터셋 상황에 따른 Detection 방법 선택"></a>데이터셋 상황에 따른 Detection 방법 선택</h3><p>Residual-based Detection은 Reconstruction error threshold를 넘어가면 결함으로 간주하는 원리입니다. AECs가 Normal 한 이미지를 reconstruction을 하도록 학습하는 과정은 결함이 있는 구조를 깨끗한 이미지로 대처하도록 하는 것이 목적이지 그 주변 환경과의 대비를 더 명확하게 주라고 학습을 한 것은 아닙니다. 그래서 reconstruction image가 주변 환경과 대조가 잘 되지 않으면 residual intensities가 낮게 나옵니다.</p>
-<p>반면에 Uncertainity-based Detection은 이미지의 구조와 주변 환경의 대비에 의존하지 않는다는게 가장 큰 특징입니다. 따라서 대비가 늦은 결함 이미지의 경우 Anomaly Detection 기능이 향상됩니다.</p>
-<p>정리를 한번 해보도록 하겠습니다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">주변환경과 데이터셋 대비가 명확하다</span><br><span class="line">→  Residual-based Detection 전략이 좋다.</span><br><span class="line"></span><br><span class="line">주변 환경과 데이터셋 대비가 명확하지 않다.</span><br><span class="line">→  Uncertainity-based Detection 전략이 좋다.</span><br></pre></td></tr></table></figure>
-<p>추가적으로 위에서도 언급했다 싶이 Residual-based Detection 전략으로 진행할 경우 AESc + Stain model은 일반적으로 산발적인 반점으로 구성 된 reconstruction residual을 유발하고 낮은 대비를 갖는 데이터셋에 대해 결함을 놓치게 됩니다. 이런 경우에는 Uncertainity-based 전략이 효과적입니다.</p>
-<hr>
-<h1 id="5-Conclusion"><a href="#5-Conclusion" class="headerlink" title="5.Conclusion"></a>5.Conclusion</h1><p>Query image에서 Normal image를 reconstruction 하는 것을 기반으로 한 anomaly detection 방법을 진행하기 위해서 본 논문에서는 <code>Skip-connection을 사용한 AutoEncoder인 AESc를 기반으로 MCDropout으로 30번 estimated된 reconstruction residual 또는 prediction uncertainity에 의존하여 Anomaly Detection을 진행</code>합니다.</p>
-<p>Skip-connections를 Addition 시켜 사용한 AutoEncoder 구조를 사용할 때 장접을 본 논문에서는 입증을 하였으며 <code>Identity mapping이 이루어지지 않도록 train image가 Stain Noise model로 corrupted 시켜서 학습을 진행</code>하였습니다.</p>
-<p>또한 본 논문에서 사용된 새로운 접근 방법은 일반 AutoEncoder보다 상당히 잘 MVTec AD Dataset들의 결함들을 잘 검출 해냈으며 AECs + Stain noise model을 사용하여 AutoEncoder와의 Uncertainity-based Detection 전략을 공정하게 비교해냈습니다.</p>
-<p>Reconstruction residual과 달리 Uncertainity Indicator는 결함과 그 주변 사이 환경의 대비와는 무관합니다. 따라서 주변 환경과 대비가 뚜렷하다면 Reconstruction residual 전략으로 가고 대비가 뚜렷한 대비가 없다는 Uncertainity 기반 전략으로 Anomaly Detection을 진행하면 됩니다.</p>
-<p>또한 Residual-based detection 전략에 비해 Uncertainty-based detection 전략은 Normal한 query image에서 false-positive rate를 증가키시게 되는 단점이 존재합니다.</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/25/GAN%E1%84%8B%E1%85%B3%E1%86%AF-%E1%84%8B%E1%85%B5%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%92%E1%85%A1%E1%86%AB-%E1%84%92%E1%85%AD%E1%84%8B%E1%85%B2%E1%86%AF%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%B5%E1%86%AB-Anomaly-Detection-%E1%84%87%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A5%E1%86%B8-f-AnoGAN-vs-MemAE/#more" rel="contents">
+                더 읽어보기 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
