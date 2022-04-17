@@ -22,19 +22,20 @@
     var CONFIG = {"hostname":"mulkong.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 Tistory에서 보실 수 있습니다.   Abstract 정상 데이터를 이용하여 Autoencoder(AE)을 학습하면 정상보단 비정상 데이터에 대해 더 높은 재구성 오류(reconstruction error)을 얻게 됩니다. 하지만">
+  <meta name="description" content="이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 Tistory에서 보실 수 있습니다.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Memory-augmented Deep Autoencoder for Unsupervised Anomaly Detection [MemAE]">
 <meta property="og:url" content="http://mulkong.github.io/2021/12/26/MemAE-Memorizing-Normality-to-Detect-Anomaly-Memory-augmented-Deep-Autoencoder-for-Unsupervised-Anomaly-Detection/index.html">
 <meta property="og:site_name" content="Mulkong DeepLearning">
-<meta property="og:description" content="이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 Tistory에서 보실 수 있습니다.   Abstract 정상 데이터를 이용하여 Autoencoder(AE)을 학습하면 정상보단 비정상 데이터에 대해 더 높은 재구성 오류(reconstruction error)을 얻게 됩니다. 하지만">
+<meta property="og:description" content="이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 Tistory에서 보실 수 있습니다.">
 <meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0004/figure_0002.png">
 <meta property="og:image" content="http://mulkong.github.io/images/post_images/post0004/figure_0002.png">
 <meta property="og:image" content="http://mulkong.github.io/images/post_images/post0005/figure0001.png">
 <meta property="og:image" content="http://mulkong.github.io/images/post_images/post0005/figure_0002.png">
 <meta property="og:image" content="http://mulkong.github.io/images/post_images/post0005/figure_0003.png">
 <meta property="article:published_time" content="2021-12-26T10:10:20.000Z">
-<meta property="article:modified_time" content="2021-12-26T10:35:42.000Z">
+<meta property="article:modified_time" content="2022-04-17T09:57:44.341Z">
 <meta property="article:author" content="mulkong">
 <meta property="article:tag" content="GAN">
 <meta property="article:tag" content="Vision">
@@ -206,7 +207,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">포스트</span>
         </a>
       </div>
@@ -280,10 +281,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">작성일</span>
-      
 
-      <time title="Post created: 2021-12-26 19:10:20 / Updated at: 19:35:42" itemprop="dateCreated datePublished" datetime="2021-12-26T19:10:20+09:00">2021-12-26</time>
+      <time title="Post created: 2021-12-26 19:10:20" itemprop="dateCreated datePublished" datetime="2021-12-26T19:10:20+09:00">2021-12-26</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Updated at: 2022-04-17 18:57:44" itemprop="dateModified" datetime="2022-04-17T18:57:44+09:00">2022-04-17</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -309,6 +316,10 @@
 <li>이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 <a target="_blank" rel="noopener" href="https://sensibilityit.tistory.com/519">Tistory</a>에서 보실 수 있습니다.</li>
 </ul>
 <hr>
+<img src="/images/post_images/post0004/figure_0002.png" width="100%" height="100%">
+
+<a id="more"></a>
+
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><hr>
 <p>정상 데이터를 이용하여 Autoencoder(AE)을 학습하면 정상보단 비정상 데이터에 대해 더 높은 재구성 오류(reconstruction error)을 얻게 됩니다. 하지만 AE는 일반화(Generalization)가 잘 이루어진다는 특징이 있어서 비정상 데이터가 입력되어도 정상을 재구성 해야하지만 결함이 있는 부분까지 포함하여 재구성 하는 경우가 발생하게 됩니다.</p>
 <p>이런 AE기반 이상 탐지(Anomaly Detection)의 한계점을 개선하기 위한 해결책으로 메모리 모듈(memory module)을 사용하여 AE을 augmented 하는 방법인 MemAE을 이 논문에서는 제안하고 있습니다.</p>

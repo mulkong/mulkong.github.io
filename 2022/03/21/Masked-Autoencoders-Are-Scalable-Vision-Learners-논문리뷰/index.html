@@ -22,23 +22,21 @@
     var CONFIG = {"hostname":"mulkong.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="Anomaly Detection 분야를 연구하고 있으며 GAN에 매우 관심이 많습니다.     Github: https:&#x2F;&#x2F;github.com&#x2F;mulkong Mail: kojae8311@g.skku.edu Rocketpunch: https:&#x2F;&#x2F;www.rocketpunch.com&#x2F;@kojae8311 LinkeIn: https:&#x2F;&#x2F;www.linkedi">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Mulkong DeepLearning">
-<meta property="og:url" content="http://mulkong.github.io/about/index.html">
+  <meta name="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Masked Autoencoders Are Scalable Vision Learners 논문리뷰">
+<meta property="og:url" content="http://mulkong.github.io/2022/03/21/Masked-Autoencoders-Are-Scalable-Vision-Learners-%EB%85%BC%EB%AC%B8%EB%A6%AC%EB%B7%B0/index.html">
 <meta property="og:site_name" content="Mulkong DeepLearning">
-<meta property="og:description" content="Anomaly Detection 분야를 연구하고 있으며 GAN에 매우 관심이 많습니다.     Github: https:&#x2F;&#x2F;github.com&#x2F;mulkong Mail: kojae8311@g.skku.edu Rocketpunch: https:&#x2F;&#x2F;www.rocketpunch.com&#x2F;@kojae8311 LinkeIn: https:&#x2F;&#x2F;www.linkedi">
+<meta property="og:description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:image" content="http://mulkong.github.io/about/images/me.jpg">
-<meta property="article:published_time" content="2022-03-13T23:58:58.707Z">
-<meta property="article:modified_time" content="2020-10-03T04:13:54.000Z">
+<meta property="article:published_time" content="2022-03-21T04:34:16.000Z">
+<meta property="article:modified_time" content="2022-03-21T04:34:16.261Z">
 <meta property="article:author" content="mulkong">
 <meta property="article:tag" content="DeepLearning, AI, Pytorch, Python, MachineLearning, Programming">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://mulkong.github.io/about/images/me.jpg">
 
 
-<link rel="canonical" href="http://mulkong.github.io/about/">
+<link rel="canonical" href="http://mulkong.github.io/2022/03/21/Masked-Autoencoders-Are-Scalable-Vision-Learners-%EB%85%BC%EB%AC%B8%EB%A6%AC%EB%B7%B0/">
 
 
 <script class="page-configurations">
@@ -46,13 +44,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'ko'
   };
 </script>
 
-  <title> | Mulkong DeepLearning
-</title>
+  <title>Masked Autoencoders Are Scalable Vision Learners 논문리뷰 | Mulkong DeepLearning</title>
   
 
 
@@ -236,59 +233,83 @@
 </noscript>
 
 
-    <div class="main-inner page posts-expand">
+    <div class="main-inner post posts-expand">
       
-  
-  
 
       
 
-    
-    
-    
-    <div class="post-block" lang="ko">
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2022/03/21/Masked-Autoencoders-Are-Scalable-Vision-Learners-%EB%85%BC%EB%AC%B8%EB%A6%AC%EB%B7%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="mulkong">
+      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mulkong DeepLearning">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Masked Autoencoders Are Scalable Vision Learners 논문리뷰
+        </h1>
 
-<h1 class="post-title" itemprop="name headline">
-</h1>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">작성일</span>
 
-<div class="post-meta-container">
+      <time title="Post created: 2022-03-21 13:34:16" itemprop="dateCreated datePublished" datetime="2022-03-21T13:34:16+09:00">2022-03-21</time>
+    </span>
+
   
-
 </div>
 
-</header>
+        </div>
+      </header>
 
-      
-      
-      
-      <div class="post-body">
-          <img src="images/me.jpg" width="200" height="200">
-
-
-<center>
-<mark style="background-color: #fff5b1">
-Anomaly Detection 분야를 연구하고 있으며 GAN에 매우 관심이 많습니다.
-</mark>
-</center>
-
-<ul>
-<li>Github: <a target="_blank" rel="noopener" href="https://github.com/mulkong">https://github.com/mulkong</a></li>
-<li>Mail: <a href="">kojae8311@g.skku.edu</a></li>
-<li>Rocketpunch: <a target="_blank" rel="noopener" href="https://www.rocketpunch.com/@kojae8311">https://www.rocketpunch.com/@kojae8311</a></li>
-<li>LinkeIn: <a target="_blank" rel="noopener" href="https://www.linkedin.com/in/mulkong/">https://www.linkedin.com/in/mulkong/</a></li>
-</ul>
-
-      </div>
-      
-      
-      
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        
     </div>
-    
 
     
     
     
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/13/Adversarial-Latent-Autoencoders-md/" rel="prev" title="Adversarial Latent Autoencoders">
+                  <i class="fa fa-chevron-left"></i> Adversarial Latent Autoencoders
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
 
 
       
