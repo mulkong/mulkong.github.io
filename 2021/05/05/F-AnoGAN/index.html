@@ -29,11 +29,12 @@
 <meta property="og:site_name" content="Mulkong DeepLearning">
 <meta property="og:description" content="GAN을 사용한 최초 Anomaly Detection 방법인 AnoGAN의 후속 모델로 Encoder 모델을 사용하여 더 빠르게 $G(x)$와 $x$를 latent space안에 mapping 시켜 Anomaly Detection 하는 방법입니다. Paper 원문: f-AnoGAN: Fast unsupervised anomaly detection wit">
 <meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0002/f-AnoGAN_figure2.png">
 <meta property="og:image" content="http://mulkong.github.io/images/post_images/post0002/f-AnoGAN_figure1.png">
 <meta property="og:image" content="http://mulkong.github.io/images/post_images/post0002/f-AnoGAN_figure2.png">
 <meta property="og:image" content="http://mulkong.github.io/images/post_images/post0002/f-AnoGAN_figure3.png">
 <meta property="article:published_time" content="2021-05-05T06:09:09.000Z">
-<meta property="article:modified_time" content="2021-05-05T08:29:50.000Z">
+<meta property="article:modified_time" content="2022-04-17T10:08:55.332Z">
 <meta property="article:author" content="mulkong">
 <meta property="article:tag" content="GAN">
 <meta property="article:tag" content="Unsupervised Learning">
@@ -42,7 +43,7 @@
 <meta property="article:tag" content="Encoder">
 <meta property="article:tag" content="latent space mapping">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://mulkong.github.io/images/post_images/post0002/f-AnoGAN_figure1.png">
+<meta name="twitter:image" content="http://mulkong.github.io/images/post_images/post0002/f-AnoGAN_figure2.png">
 
 
 <link rel="canonical" href="http://mulkong.github.io/2021/05/05/F-AnoGAN/">
@@ -279,10 +280,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">작성일</span>
-      
 
-      <time title="Post created: 2021-05-05 15:09:09 / Updated at: 17:29:50" itemprop="dateCreated datePublished" datetime="2021-05-05T15:09:09+09:00">2021-05-05</time>
+      <time title="Post created: 2021-05-05 15:09:09" itemprop="dateCreated datePublished" datetime="2021-05-05T15:09:09+09:00">2021-05-05</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Updated at: 2022-04-17 19:08:55" itemprop="dateModified" datetime="2022-04-17T19:08:55+09:00">2022-04-17</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -309,6 +316,8 @@
 <li>Paper 원문: f-AnoGAN: <a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S1361841518302640">Fast unsupervised anomaly detection with generative adversarial networks</a></li>
 <li>f-AnoGAN tutorial code(Pytorch): <a target="_blank" rel="noopener" href="https://github.com/mulkong/f-AnoGAN_with_Pytorch">Tutorial Link</a></li>
 </ul>
+<p><img src="/images/post_images/post0002/f-AnoGAN_figure2.png"></p>
+<a id="more"></a>
 <hr>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><h2 id="문제점"><a href="#문제점" class="headerlink" title="문제점"></a>문제점</h2><p>정확한 annotation은 시간이 많이 들기 때문에 전문가(방사선사, 의사 등)가 clinical imaging(임상 영상)을 직접 annotation을 표시한 데이터를 얻는 것은 어렵다. 또한 모든 병변에 대해 annotation이 표시되지 않을 수 있으며 annotation에 대해서 정확하게 이 병변이 어떤 병변인지 설명 되어있지 않은 경우도 있습니다.</p>
 <h2 id="지도-학습-supervised-learning-의-장단점"><a href="#지도-학습-supervised-learning-의-장단점" class="headerlink" title="지도 학습(supervised learning)의 장단점"></a>지도 학습(supervised learning)의 장단점</h2><p>전문가로부터 분류된 training data를 받아 Supervised Learning 방식으로 모델을 학습 시키면 좋은 성능을 얻는 반면, annotation이 표시된 병변으로만 제한이 되는게 단점이다.</p>
@@ -397,7 +406,7 @@
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/12/25/GAN%E1%84%8B%E1%85%B3%E1%86%AF-%E1%84%8B%E1%85%B5%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%92%E1%85%A1%E1%86%AB-%E1%84%92%E1%85%AD%E1%84%8B%E1%85%B2%E1%86%AF%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%B5%E1%86%AB-Anomaly-Detection-%E1%84%87%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A5%E1%86%B8-f-AnoGAN-vs-MemAE/" rel="next" title="GAN을 이용한 효율적인 Anomaly Detection 방법 [f-AnoGAN vs MemAE]">
+                <a href="/2021/12/25/Efficient-Anomaly-Detection-Method-Using-GAN/" rel="next" title="GAN을 이용한 효율적인 Anomaly Detection 방법 [f-AnoGAN vs MemAE]">
                   GAN을 이용한 효율적인 Anomaly Detection 방법 [f-AnoGAN vs MemAE] <i class="fa fa-chevron-right"></i>
                 </a>
             </div>

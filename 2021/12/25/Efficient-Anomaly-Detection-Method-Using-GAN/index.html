@@ -25,14 +25,14 @@
   <meta name="description" content="이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 Tistory에서 보실 수 있습니다.   Unsupervised Learning 방법으로 GAN을 이용한 Anomaly Detection 방법 중 Encoder 부분을 이용한 f-AnoGAN 방법이 있습니다. 이 방법은 효율적으로 A">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GAN을 이용한 효율적인 Anomaly Detection 방법 [f-AnoGAN vs MemAE]">
-<meta property="og:url" content="http://mulkong.github.io/2021/12/25/GAN%E1%84%8B%E1%85%B3%E1%86%AF-%E1%84%8B%E1%85%B5%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%92%E1%85%A1%E1%86%AB-%E1%84%92%E1%85%AD%E1%84%8B%E1%85%B2%E1%86%AF%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%B5%E1%86%AB-Anomaly-Detection-%E1%84%87%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A5%E1%86%B8-f-AnoGAN-vs-MemAE/index.html">
+<meta property="og:url" content="http://mulkong.github.io/2021/12/25/Efficient-Anomaly-Detection-Method-Using-GAN/index.html">
 <meta property="og:site_name" content="Mulkong DeepLearning">
 <meta property="og:description" content="이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 Tistory에서 보실 수 있습니다.   Unsupervised Learning 방법으로 GAN을 이용한 Anomaly Detection 방법 중 Encoder 부분을 이용한 f-AnoGAN 방법이 있습니다. 이 방법은 효율적으로 A">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:image" content="http://mulkong.github.io/images/post_images/post0004/figure_0001.png">
 <meta property="og:image" content="http://mulkong.github.io/images/post_images/post0004/figure_0002.png">
 <meta property="article:published_time" content="2021-12-25T04:18:02.000Z">
-<meta property="article:modified_time" content="2022-04-17T10:04:22.835Z">
+<meta property="article:modified_time" content="2022-04-17T10:08:22.813Z">
 <meta property="article:author" content="mulkong">
 <meta property="article:tag" content="GAN">
 <meta property="article:tag" content="Autoencoder">
@@ -44,7 +44,7 @@
 <meta name="twitter:image" content="http://mulkong.github.io/images/post_images/post0004/figure_0001.png">
 
 
-<link rel="canonical" href="http://mulkong.github.io/2021/12/25/GAN%E1%84%8B%E1%85%B3%E1%86%AF-%E1%84%8B%E1%85%B5%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%92%E1%85%A1%E1%86%AB-%E1%84%92%E1%85%AD%E1%84%8B%E1%85%B2%E1%86%AF%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%B5%E1%86%AB-Anomaly-Detection-%E1%84%87%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A5%E1%86%B8-f-AnoGAN-vs-MemAE/">
+<link rel="canonical" href="http://mulkong.github.io/2021/12/25/Efficient-Anomaly-Detection-Method-Using-GAN/">
 
 
 <script class="page-configurations">
@@ -255,7 +255,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
-    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/12/25/GAN%E1%84%8B%E1%85%B3%E1%86%AF-%E1%84%8B%E1%85%B5%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%92%E1%85%A1%E1%86%AB-%E1%84%92%E1%85%AD%E1%84%8B%E1%85%B2%E1%86%AF%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%B5%E1%86%AB-Anomaly-Detection-%E1%84%87%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A5%E1%86%B8-f-AnoGAN-vs-MemAE/">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/12/25/Efficient-Anomaly-Detection-Method-Using-GAN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -286,7 +286,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Updated at: 2022-04-17 19:04:22" itemprop="dateModified" datetime="2022-04-17T19:04:22+09:00">2022-04-17</time>
+        <time title="Updated at: 2022-04-17 19:08:22" itemprop="dateModified" datetime="2022-04-17T19:08:22+09:00">2022-04-17</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
