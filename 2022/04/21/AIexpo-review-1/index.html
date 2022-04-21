@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mulkong.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+
+  <meta name="description" content="이번 포스팅은 코엑스에서 개최된 2022 AI Expo에서 KAIST 김재철AI대학원 AI기술설명회 세미나 참석하고 간단하게 개인 의견을 포함하여 두서없이 정리한 내용입니다. ✔️ 설명 가능한 인공지능 동향✔️ 의료 인공지능의 동향☐ 생성모델 기술 동향☐ Federated learning☐ 자기지도(self-supervised) 기반 비지도 학습 기술">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KAIST 김재철AI대학원 AI설명회 정리-1">
+<meta property="og:url" content="http://mulkong.github.io/2022/04/21/AIexpo-review-1/index.html">
+<meta property="og:site_name" content="Mulkong DeepLearning">
+<meta property="og:description" content="이번 포스팅은 코엑스에서 개최된 2022 AI Expo에서 KAIST 김재철AI대학원 AI기술설명회 세미나 참석하고 간단하게 개인 의견을 포함하여 두서없이 정리한 내용입니다. ✔️ 설명 가능한 인공지능 동향✔️ 의료 인공지능의 동향☐ 생성모델 기술 동향☐ Federated learning☐ 자기지도(self-supervised) 기반 비지도 학습 기술">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0008/figure0001.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0008/figure0002.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0008/figure0003.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0008/figure0004.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0008/figure0005.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0008/figure0006.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0008/figure0007.png">
+<meta property="article:published_time" content="2022-04-21T10:02:16.000Z">
+<meta property="article:modified_time" content="2022-04-21T11:11:49.884Z">
+<meta property="article:author" content="mulkong">
+<meta property="article:tag" content="KAIST AI 대학원">
+<meta property="article:tag" content="세미나">
+<meta property="article:tag" content="설명 가능한 인공지능">
+<meta property="article:tag" content="의료 인공지능">
+<meta property="article:tag" content="Explainable AI">
+<meta property="article:tag" content="Medical AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mulkong.github.io/images/post_images/post0008/figure0001.png">
+
+
+<link rel="canonical" href="http://mulkong.github.io/2022/04/21/AIexpo-review-1/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ko'
+  };
+</script>
+
+  <title>KAIST 김재철AI대학원 AI설명회 정리-1 | Mulkong DeepLearning</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Mulkong DeepLearning</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">딥러닝 정리 블로그</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>홈</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>태그</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>카테고리</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>아카이브</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          목차
+        </li>
+        <li class="sidebar-nav-overview">
+          흝어보기
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%EC%84%A4%EB%AA%85-%EA%B0%80%EB%8A%A5%ED%95%9C-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5-%EB%8F%99%ED%96%A5-Explainable-AI-%EC%9D%B4%ED%95%98-XAI"><span class="nav-number">1.</span> <span class="nav-text">설명 가능한 인공지능 동향 (Explainable AI 이하 XAI)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#XAI%EA%B0%80-%ED%95%84%EC%9A%94%ED%95%9C-%EC%9D%B4%EC%9C%A0"><span class="nav-number">1.1.</span> <span class="nav-text">XAI가 필요한 이유</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%95%84%EC%9A%94-%EB%B6%84%EC%95%BC"><span class="nav-number">1.2.</span> <span class="nav-text">필요 분야</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B3%A0%EC%9C%84%ED%97%98-%EB%B6%84%EC%95%BC%EC%97%90-XAI-%EA%B4%80%EB%A0%A8-%EB%B2%95%EC%95%88-%EB%B0%9C%EC%9D%98"><span class="nav-number">1.3.</span> <span class="nav-text">고위험 분야에 XAI 관련 법안 발의</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%95%B4%EA%B2%B0-%EB%B0%A9%EC%95%88"><span class="nav-number">1.4.</span> <span class="nav-text">해결 방안</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%94%A5%EB%9F%AC%EB%8B%9D-%EB%B6%84%EC%95%BC"><span class="nav-number">1.4.1.</span> <span class="nav-text">딥러닝 분야</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-%EB%B6%84%EC%95%BC"><span class="nav-number">1.4.2.</span> <span class="nav-text">기계학습 분야</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%B0%A9%EB%B2%95"><span class="nav-number">1.5.</span> <span class="nav-text">방법</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Layer-wise-Relevance-Propagation-LRP"><span class="nav-number">1.5.1.</span> <span class="nav-text">Layer-wise Relevance Propagation(LRP)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95-%EC%84%A4%EB%AA%85%EC%9D%B4-%EB%B3%B4%EC%A1%B4%EB%90%98%EB%8A%94-%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC-%EC%95%95%EC%B6%95-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98"><span class="nav-number">1.5.2.</span> <span class="nav-text">의사결정 설명이 보존되는 네트워크 압축 알고리즘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%B0%98%EC%82%AC%EC%8B%A4%EC%A0%81-%EC%B6%94%EB%A1%A0-%EB%AA%A8%EB%8D%B8%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%A7%80%EB%8F%84%ED%95%99%EC%8A%B5-%EC%9E%90%EB%A3%8C-%EB%B3%B4%EA%B0%95-%EC%84%9C%EC%9A%B8%EB%8C%80"><span class="nav-number">1.5.3.</span> <span class="nav-text">반사실적 추론 모델을 이용한 지도학습 자료 보강 (서울대)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%8F%AC%EC%8A%A4%EC%BD%94-%EA%B3%A0%EB%A1%9C-%EC%83%81%ED%83%9C%EB%A5%BC-%EC%98%88%EC%B8%A1%ED%95%98%EA%B3%A0-%EC%84%A4%EB%AA%85%ED%95%98%EB%8A%94-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5-%EA%B8%B0%EC%88%A0"><span class="nav-number">1.5.4.</span> <span class="nav-text">포스코 고로 상태를 예측하고 설명하는 인공지능 기술</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GAN-Dissection"><span class="nav-number">1.6.</span> <span class="nav-text">GAN Dissection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EC%9B%90%EC%9D%B8"><span class="nav-number">1.6.1.</span> <span class="nav-text">원인</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%95%B4%EA%B2%B0%EC%B1%85"><span class="nav-number">1.6.2.</span> <span class="nav-text">해결책</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%EC%9D%98%EB%A3%8C-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5-%EB%8F%99%ED%96%A5-AI-for-Healthcare"><span class="nav-number">2.</span> <span class="nav-text">의료 인공지능 동향 (AI for Healthcare)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%AA%A9%ED%91%9C"><span class="nav-number">2.1.</span> <span class="nav-text">목표</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#EHR-electronic-health-records"><span class="nav-number">2.1.1.</span> <span class="nav-text">EHR(electronic health records)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Limitation-RNN"><span class="nav-number">2.1.2.</span> <span class="nav-text">Limitation RNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EHR-Medical-Image"><span class="nav-number">2.1.3.</span> <span class="nav-text">EHR + Medical Image</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zero-shot-amp-Few-shot-Transfer"><span class="nav-number">2.1.4.</span> <span class="nav-text">Zero-shot &amp; Few-shot Transfer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Structured-EHR"><span class="nav-number">2.1.5.</span> <span class="nav-text">Structured EHR</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Industry-Application"><span class="nav-number">2.2.</span> <span class="nav-text">Industry Application</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EB%94%A5%EB%A7%88%EC%9D%B8%EB%93%9C-2019%EB%85%84-%EC%97%B0%EA%B5%AC-%EA%B2%B0%EA%B3%BC-AI-assisted-clinical-care-pathway"><span class="nav-number">2.2.0.1.</span> <span class="nav-text">딥마인드(2019년 연구 결과) - AI assisted clinical care pathway</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EA%B5%AC%EA%B8%80%ED%97%AC%EC%8A%A4-Based-on-longitudinal-EHR-data-from-two-hospitals"><span class="nav-number">2.2.0.2.</span> <span class="nav-text">구글헬스(Based on longitudinal EHR data from two hospitals)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Apple-healths-Arrhythmia-Detection"><span class="nav-number">2.2.0.3.</span> <span class="nav-text">Apple healths (Arrhythmia Detection)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Amazon-comprehed-medical-amazon-care"><span class="nav-number">2.2.0.4.</span> <span class="nav-text">Amazon comprehed medical (amazon care)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deepmind-AlphaFold"><span class="nav-number">2.2.0.5.</span> <span class="nav-text">Deepmind AlphaFold</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MELLODDY-%EC%A0%9C%EC%95%BD"><span class="nav-number">2.2.0.6.</span> <span class="nav-text">MELLODDY (제약)</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">mulkong</p>
+  <div class="site-description" itemprop="description">공부한 내용을 바탕으로 정리한 기술블로그 입니다.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">포스트</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">카테고리</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">태그</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2022/04/21/AIexpo-review-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="mulkong">
+      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mulkong DeepLearning">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          KAIST 김재철AI대학원 AI설명회 정리-1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">작성일</span>
+      
+
+      <time title="Post created: 2022-04-21 19:02:16 / Updated at: 20:11:49" itemprop="dateCreated datePublished" datetime="2022-04-21T19:02:16+09:00">2022-04-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%EC%84%B8%EB%AF%B8%EB%82%98/" itemprop="url" rel="index"><span itemprop="name">세미나</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <hr>
+<img src="/images/post_images/post0008/figure0001.png" width="100%" height="100%">
+
+<p>이번 포스팅은 코엑스에서 개최된 2022 AI Expo에서 KAIST 김재철AI대학원 AI기술설명회 세미나 참석하고 간단하게 개인 의견을 포함하여 두서없이 정리한 내용입니다.</p>
+<p>✔️ 설명 가능한 인공지능 동향<br>✔️ 의료 인공지능의 동향<br>☐ 생성모델 기술 동향<br>☐ Federated learning<br>☐ 자기지도(self-supervised) 기반 비지도 학습 기술<br>☐ 가상인간 기술</p>
+<p>정리한 내용이 많아 글은 총 2편으로 나누어서 작성을 하겠습니다.</p>
+<hr>
+<a id="more"></a>
+
+
+</br>
+</br>
+
+<h1 id="설명-가능한-인공지능-동향-Explainable-AI-이하-XAI"><a href="#설명-가능한-인공지능-동향-Explainable-AI-이하-XAI" class="headerlink" title="설명 가능한 인공지능 동향 (Explainable AI 이하 XAI)"></a>설명 가능한 인공지능 동향 (Explainable AI 이하 XAI)</h1><blockquote>
+<h2 id="XAI가-필요한-이유"><a href="#XAI가-필요한-이유" class="headerlink" title="XAI가 필요한 이유"></a>XAI가 필요한 이유</h2></blockquote>
+<p>일반적으로 인공지능 모델에 던질 수 있는 질문을 다음과 같이 정리할 수 있습니다.</p>
+<ul>
+<li>많은 weights를 이용해서 딥러닝 설명하는 것이 가능한가?</li>
+<li>딥러닝이 아닌 다른 기계학습 모델도 설명하는 것이 가능한가?</li>
+<li>XAI을 이용하면 기존 AI 모델 성능을 올릴 수 있는가?</li>
+<li>어느 분야에 XAI를 적용할 수 있는가?</li>
+</ul>
+</br>
+</br>
+
+<blockquote>
+<h2 id="필요-분야"><a href="#필요-분야" class="headerlink" title="필요 분야"></a>필요 분야</h2></blockquote>
+<p>필요 분야는 크게 아래와 같이 정리해볼 수 있다.</p>
+<ul>
+<li>제조 - 제조 공정의 상태를 설명</li>
+<li>의료 - 중환자의 상태를 설명</li>
+<li>IT - 생성 모델의 원리 설명</li>
+<li>금융 - 고객 신용평가 모델의 이유를 설명</li>
+</ul>
+<p>부족한 데이터로 인공지능 모델을 학습하거나 잘못된 방향으로 모델을 학습하는 경우 성능이 잘 나올 수도 있겠지만 <code>신뢰할 수 없는 모델</code>일 수 밖에 없으며 대부분 학습이 제대로 안될것이다. </p>
+<p>이런 경우 우리는 <code>why??</code> 라는 질문을 내던져볼 수 있다.</p>
+<ul>
+<li><code>왜 학습이 잘못 되었는지 설명이 가능하나?</code></li>
+<li><code>어떤 이유로 인해 학습이 잘 되었으며 왜 결과가 잘 나오는지 설명이 가능하나?</code></li>
+</ul>
+<p>이러한 이유로 인해 Explainable AI 즉, 설명 가능한 인공지능이 필요하다.</p>
+<img src="/images/post_images/post0008/figure0002.png" width="50%" height="50%">
+
+</br>
+</br>
+
+<blockquote>
+<h2 id="고위험-분야에-XAI-관련-법안-발의"><a href="#고위험-분야에-XAI-관련-법안-발의" class="headerlink" title="고위험 분야에 XAI 관련 법안 발의"></a>고위험 분야에 XAI 관련 법안 발의</h2></blockquote>
+<p>최근 고위험 분야에서 XAI 법안 발의가 되었다고 한다. 따라서 앞으로는 인공지능 모델을 이용하여 사업화를 진행한다면 결과가 더 투명해야 하고 이런 법안들을 잘 통과 시켜야 한다고 언급을 해주셨다.</p>
+</br>
+</br>
+
+<blockquote>
+<h2 id="해결-방안"><a href="#해결-방안" class="headerlink" title="해결 방안"></a>해결 방안</h2></blockquote>
+<img src="/images/post_images/post0008/figure0003.png" width="50%" height="50%">
+
+<h3 id="딥러닝-분야"><a href="#딥러닝-분야" class="headerlink" title="딥러닝 분야"></a>딥러닝 분야</h3><p>딥러닝 분야에서 XAI를 이용한 해결 방법으론 다음과 같다.</p>
+<ul>
+<li>입력에 대한 설명</li>
+<li>출력에 대한 설명</li>
+<li>내부에 대한 설명 </li>
+</ul>
+<h3 id="기계학습-분야"><a href="#기계학습-분야" class="headerlink" title="기계학습 분야"></a>기계학습 분야</h3><p>입력을 변경할 때 출력이 어떻게 변경 되는가에 대한 설명이 필요하다.<br><em>ex) 판다에 노이즈를 넣은 결과 다른 결과로 인식하는 경우</em></p>
+</br>
+</br>
+
+<h2 id="방법"><a href="#방법" class="headerlink" title="방법"></a>방법</h2><h3 id="Layer-wise-Relevance-Propagation-LRP"><a href="#Layer-wise-Relevance-Propagation-LRP" class="headerlink" title="Layer-wise Relevance Propagation(LRP)"></a>Layer-wise Relevance Propagation(LRP)</h3><p>LRP는 입력 데이터가 인공지능 모델의 특정 물체를 잘 인지했는지 기여하는 <code>입력 기여도 평가법</code>이다. 인공지능 모델에서 각 layer들은 선형 모델(linear model)로 이루어져 있다. 그래서 layer마다 얼마나 결과에 기여했는지 계산하는 방법이다.</p>
+<p>이 내용에 대해 잘 정리가 된 블로그의 문구를 이용하면 다음과 같다.</p>
+<p>LRP는 타당성 전파와 분해 방법을 사용해 모델을 해부하며, 출력값에서 부터 시작해 타당성 점수 또는 기여도라 불리는 relevance score를 입력단 방향으로 계산해 나가며 그 비중을 분해하는 방법이라고 한다.<br>(출처: <a target="_blank" rel="noopener" href="https://velog.io/@tobigs_xai/3%EC%A3%BC%EC%B0%A8LRPLayer-wise-Relevance-Propagation">https://velog.io/@tobigs_xai/3주차LRPLayer-wise-Relevance-Propagation</a>)</p>
+<img src="/images/post_images/post0008/figure0004.png" width="50%" height="50%">
+
+<h3 id="의사결정-설명이-보존되는-네트워크-압축-알고리즘"><a href="#의사결정-설명이-보존되는-네트워크-압축-알고리즘" class="headerlink" title="의사결정 설명이 보존되는 네트워크 압축 알고리즘"></a>의사결정 설명이 보존되는 네트워크 압축 알고리즘</h3><p>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2010.15054.pdf"><strong>Attribution preservation in network compression for relible network interpretation</strong></a></p>
+<p>네트워크가 잘 압축 되면서도 설명성을 유지할 수 있는 기술인 논문이다. 이 논문에서는 압축 할때도 설명성이 필요하다 라고 언급을 하고있다.</p>
+<h3 id="반사실적-추론-모델을-이용한-지도학습-자료-보강-서울대"><a href="#반사실적-추론-모델을-이용한-지도학습-자료-보강-서울대" class="headerlink" title="반사실적 추론 모델을 이용한 지도학습 자료 보강 (서울대)"></a>반사실적 추론 모델을 이용한 지도학습 자료 보강 (서울대)</h3><p>Attention model로 사람이 마스킹 해주는 것 대신 자동으로 어떤 텍스트를 보고 잘 되는것인지 설명하는 모델 방법이다.</p>
+<h3 id="포스코-고로-상태를-예측하고-설명하는-인공지능-기술"><a href="#포스코-고로-상태를-예측하고-설명하는-인공지능-기술" class="headerlink" title="포스코 고로 상태를 예측하고 설명하는 인공지능 기술"></a>포스코 고로 상태를 예측하고 설명하는 인공지능 기술</h3><p>뉴스 기사 참고 → <a target="_blank" rel="noopener" href="https://tk.newdaily.co.kr/site/data/html/2020/02/10/2020021000197.html">Link</a></p>
+<p>세미나에서 세계 초초로 설명 가능한 인공지능 표준을 카이스트에서 제안했고 최근에 그 제안이 받아드려 지고 있다고 했다.</p>
+</br>
+
+<hr>
+<p>여기까지 설명 가능한 인공지능(XAI)을 이용하면 다음과 같은 질문을 해볼 수 있다.</p>
+<blockquote>
+<p>Q. 설명 가능한 인공지능을 하면 성능이 좋아지나?<br>A. 인공지능 모델이 배를 보고 배라고 정답을 내야하는데 배는 안보고 주변 환경인 바다를 보면서 배라고 답을 내놓는 경향이 있다. 이는 데이터가 얼마나 bias 되어있는지를 말할 수 있고 데이터가 얼마나 중요한 부분을 보고 물체를 결정했는 건가 라는 것을 말할 수 있다. 이는 인공지능 모델에 대한 검증이 가능하다 라고 말을 할 수 있다.</p>
+</blockquote>
+<hr>
+</br>
+</br>
+
+<blockquote>
+<h2 id="GAN-Dissection"><a href="#GAN-Dissection" class="headerlink" title="GAN Dissection"></a>GAN Dissection</h2></blockquote>
+<img src="/images/post_images/post0008/figure0005.png" width="50%" height="50%">
+
+<p>생성 모델에서도 설명 가능한 인공지능이 필요하다고 했다. 그에 대한 논문은 다음과 같다.</p>
+<p>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1811.10597.pdf"><strong>GAN DISSECTION: VISUALIZING AND UNDERSTANDING GENERATIVE ADVERSARIAL NETWORKS</strong></a></p>
+<p>이 세미나에서 생성 결과에 오류가 있는 경우. 그에 대한 원인과 해결책을 설명해 주셧는데 정리를 해보면 다음과 같다. </p>
+<h3 id="원인"><a href="#원인" class="headerlink" title="원인"></a>원인</h3><p>생성 모델은 Discriminator(D)와 Generator(G)로 구성되어 있다. D는 real인지 fake인지 구분하는 것이 목표며 G는 D를 속이는 방향으로 학습하여 이미지를 생성하는게 목표이다. <strong>생성된 이미지와 실제 학습 이미지를 D가 구분이 어려워 지는 경우가 발생할 수 있으며 이는 생성에 문제가 있는 이미지와 문제가 없는 이미지를 D가 구분하기 어려워 하여 생성 결과에 오류가 생기게 된다</strong>고 한다.</p>
+<h3 id="해결책"><a href="#해결책" class="headerlink" title="해결책"></a>해결책</h3><p>D가 <strong>생성된 이미지와 학습 데이터와 구분이 어려워져 생성 결과에 오류</strong>가 생기는 경우 ‘논문’에서는 <strong>Discriminator에 Grad-CAM 적용하여 해결</strong> 했다고 한다. 이 내용에 대한 자세한 설명은 다음과 같다.</p>
+<p>우선 <code>feature map을 upsampling</code>한다. 이후 <code>grad-cam이 찍힌 mask 영역과 IoU(Intersection ovet Union)을 계산하여 구분이 어려워 지는 부분, 즉 결함과의 관계를 score화</code> 한다. 이런 방법으로 접근하면 <code>Discrimintor의 어느 layer때문에 구분을 잘 못하며 그로 인해 이상한 이미지를 생성하는지에 대한 activation rate를 찾을 수 있고 이 값을 이용해서 문제가 발생한 layer의 activation value를 off 시켜주면 정상적으로 이미지가 잘 생성</code> 된다고 한다.</p>
+</br>
+
+<img src="/images/post_images/post0008/figure0006.png" width="50%" height="50%">
+
+</br>
+</br>
+
+<hr>
+<h1 id="의료-인공지능-동향-AI-for-Healthcare"><a href="#의료-인공지능-동향-AI-for-Healthcare" class="headerlink" title="의료 인공지능 동향 (AI for Healthcare)"></a>의료 인공지능 동향 (AI for Healthcare)</h1><h2 id="목표"><a href="#목표" class="headerlink" title="목표"></a>목표</h2><p>Use AI to improve healthcare  for all 즉, 인공지능을 환자, 의사에게 도움이되는 의료 인공지능을 개발하는게 목표라고 한다.</p>
+<p>의료 데이터는 크게 두가지로 나뉠 수 있다.</p>
+<ul>
+<li>table data</li>
+<li>image data</li>
+</ul>
+<p>table data는 환자 의료기록 정보, 판독 음성, 판독문, 생체 신호 등을 볼 수 가 있고. image data는 말 그대로 MRI, X-ray, CT 같은 의료 영상 데이터다.</p>
+<p>이번 세미나에서는 EHR데이터로 할 수 있는 것에 중점을 두고 발표를 하신거 같은 느낌이 들었다.</p>
+</br>
+
+<h3 id="EHR-electronic-health-records"><a href="#EHR-electronic-health-records" class="headerlink" title="EHR(electronic health records)"></a>EHR(electronic health records)</h3><p>EHR 데이터는 오랫동안 쌓아온 데이터들이 많은 것이다. 뿐만 아니라 최근들어서는 HW 성능 향상으로 인해 더 정밀한 값을 얻어 질 좋은 데이터를 확보하게 될 것이다. 이런 데이터들을 이용하면 좋은 결과를 얻을 수 있을 것 이라고 기대를 한다고 한다.</p>
+<p>EHR 데이터로 할 수 있는 연구 중 대표적으로는 <strong>예측 문제</strong>를 뽑을 수 있다. 예를 들어보면 <code>내원한 환자가 미래에는 어떤 이유로 아플 예정인지, 언제 내원하면 좋을지, 어떤 약을 처방하면 좋을지 등에 대한 예측</code>을 하는 것이다.</p>
+<p>하지만 문제점이 있다. 아무리 데이터가 많아도 <code>각 병원마다 사용 포멧이 다르고 질병 코드명도 다르다.</code> 이런 문제점을 극복하고자 최근에는 어짜피 감기로 내원했는지, 어디가 아픈지 등 모든 정보들은 그 질병 정보에 대한 키워드가 있을 것이다. 따라서 <code>모든 질병 코드명들을 표준화된 vector로 벡터화(vector representation of codes) 하여 연구를 진행</code>하고 있다. 이로써 어떤 질병은 어떤 질병과 연관 되어 있는지 학습을 통해 확인할 수 있으며 EHR 데이터로 효과적인 예측 문제 연구를 수행할 수 있게 되었다.</p>
+</br>
+
+<h3 id="Limitation-RNN"><a href="#Limitation-RNN" class="headerlink" title="Limitation RNN"></a>Limitation RNN</h3><p>모든 정보를 벡터화 한 데이터를 이용하여 초기에는 RNN기반으로 연구가 진행되었다. 어느정도 성능은 잘 나오지만 한계점이 존재하는데 그 한계즘은 다음과 같다.</p>
+<p>90% 이상으로 수술이 필요하다고 했는데 왜 그런지 설명이 가능해야 한다. 하지만 RNN은 그 설명이 힘들다는 한계점이 존재한다. 모든 분야가 마찬가지겠지만 특히 의료 분야는 왜 이런 결과를 도출했는지 설명이 가능해야 신뢰를 할 수 있다. 이런 부분은 앞으로 해결해야할 연구 방향이라고 언급을 해주셨다.</p>
+</br>
+
+<h3 id="EHR-Medical-Image"><a href="#EHR-Medical-Image" class="headerlink" title="EHR + Medical Image"></a>EHR + Medical Image</h3><p>의료 데이터가 있으면 그 데이터를 판독한 판독문도 존재한다. EHR 데이터를 이용해서 또는 의료 영상 데이터만을 이용해서 인공지능 모델을 학습하기 보단 두개의 데이터를 같이 학습한 연구를 진행해본 예시이다. 이와 같이 학습하면 인공지능 모델이 직접 의료영상 데이터만을 보고 소견서를 자동으로 작성하는 것이 가능해진다.</p>
+<img src="/images/post_images/post0008/figure0007.png" width="50%" height="50%">
+
+<p>위 데이터는 의료 영상 데이터와 판독 내용 함께 입력으로 넣어주었더니 인공지능 모델이 특정 키워드만 보고 자동으로 어떤 부분을 보고 질병이라고 말을 해주고 있는 것인지 학습하는 예시이다.</p>
+<p>의료 데이터는 각 의료 장비, 병원마다 데이터들이 다 달라서 데이터 호환성이 매우 안좋다. 그래서 여러 병원 데이터를 이용해서 큰 모델을 학습하고 싶어도 힘든게 현실이다. 하지만 생각을 해보면 병원의 질병 code는 달라도 ‘고혈압’과 같은 질병 자체의 내용은 같을 것이다. 그래서 ‘고혈압’ 단어 자체를 인식하여 연구를 진행하면 병원간의 포멧이 달라도 데이터 호환성 문제 해결이 가능하다.</p>
+<h3 id="Zero-shot-amp-Few-shot-Transfer"><a href="#Zero-shot-amp-Few-shot-Transfer" class="headerlink" title="Zero-shot &amp; Few-shot Transfer"></a>Zero-shot &amp; Few-shot Transfer</h3><p>A 병원에서 학습한 모델을 B 병원에다가 낸다. 이때 재학습 하는게 아니라 테스트셋을 바로 돌려보면 성능이 잘 나오는 경우가 많다. 즉 호환성이 올라가는 결과를 볼 수 있다.</p>
+<h3 id="Structured-EHR"><a href="#Structured-EHR" class="headerlink" title="Structured EHR"></a>Structured EHR</h3><p>환자 테이블, 약품 테이블 등 테이블 데이터에 대한 정보를 다 엮어서 무언가를 파악하기는 현실적으로 어렵다. 그래서 EHR-AQ(AI 스피커 , 챗본 같은 것을 활용)을 이용하면 파악하기 좋을거 같다 라고 말을 하고 있다. 이를 활용해서 환자 입장에서 볼 때 환자가 여러가지를 물어볼 수 있을 것으로 기대함.</p>
+<p>테이블 형태를 그래프 형태로 변경하면 지식 그래프로 변환되고 이런 그래프를 탐색해가며 찾는다. 그러면 사람의 언어를 기계어로 번역하는 연구 사례처럼 잘 이루어 질 것으로 보인다. (need to go beyond text to sql)</p>
+</br>
+</br>
+
+<h2 id="Industry-Application"><a href="#Industry-Application" class="headerlink" title="Industry Application"></a>Industry Application</h2><h4 id="딥마인드-2019년-연구-결과-AI-assisted-clinical-care-pathway"><a href="#딥마인드-2019년-연구-결과-AI-assisted-clinical-care-pathway" class="headerlink" title="딥마인드(2019년 연구 결과) - AI assisted clinical care pathway"></a>딥마인드(2019년 연구 결과) - AI assisted clinical care pathway</h4><h4 id="구글헬스-Based-on-longitudinal-EHR-data-from-two-hospitals"><a href="#구글헬스-Based-on-longitudinal-EHR-data-from-two-hospitals" class="headerlink" title="구글헬스(Based on longitudinal EHR data from two hospitals)"></a>구글헬스(Based on longitudinal EHR data from two hospitals)</h4><ul>
+<li>Inpatient mortality prediction</li>
+<li>30-day readmission prediction</li>
+<li>length-of-stay prediction</li>
+<li>discharge diagnoses prediction ⇒ 진짜 목적은 서로 다른 두 병원의 포멧이 다른 경우 어떻게 극복을 할것인가에 초점을 두고 연구 진행</li>
+<li>서로 스키마가 다르니까 중립적인 스키마를 사용 (Common Data Model ex, OMOP $ FHIR)<ul>
+<li>일일이 수작업을 진행해서 결국 두 병원의 데이터를 같은 포멧으로 변환 함.</li>
+<li>결국, 병원마다 모델을 만들 필요가 없어졌으며 성능이 괜찮게 나옴.</li>
+</ul>
+</li>
+</ul>
+<h4 id="Apple-healths-Arrhythmia-Detection"><a href="#Apple-healths-Arrhythmia-Detection" class="headerlink" title="Apple healths (Arrhythmia Detection)"></a>Apple healths (Arrhythmia Detection)</h4><p>심전도 예측</p>
+<h4 id="Amazon-comprehed-medical-amazon-care"><a href="#Amazon-comprehed-medical-amazon-care" class="headerlink" title="Amazon comprehed medical (amazon care)"></a>Amazon comprehed medical (amazon care)</h4><p>B2B 서비스 (이런게 훨씬 더 리스크가 덜하고 바로 사업하기 좋은 아이템 이라고 하셨다)</p>
+<ul>
+<li>NLP로 aws에다가 api를 제공해서 내 의료 문서를 업로드 하면 그것을 태깅(객체인식)을 해주고 서비스 공개.</li>
+<li>병원, 제약사, 보험사 같은 경우 medical text를 대형으로 분석하는 경우가 많은데 그럴대 api를 이용하면 저비용으로 충분이 가능하다. 라는 서비스를 제공.</li>
+</ul>
+<h4 id="Deepmind-AlphaFold"><a href="#Deepmind-AlphaFold" class="headerlink" title="Deepmind AlphaFold"></a>Deepmind AlphaFold</h4><ul>
+<li>단백질의 구조를 자동으로 예측하는 시스템 개발함.</li>
+<li>문서만 보여줘도 단백질 구조를 예측함 → 약을 만듬 → 3D를 이용해서 어는 부분이 취약한지도 알 수 있음.</li>
+</ul>
+<h4 id="MELLODDY-제약"><a href="#MELLODDY-제약" class="headerlink" title="MELLODDY (제약)"></a>MELLODDY (제약)</h4><p>EU-lead massive drug discovery project</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/KAIST-AI-%EB%8C%80%ED%95%99%EC%9B%90/" rel="tag"># KAIST AI 대학원</a>
+              <a href="/tags/%EC%84%B8%EB%AF%B8%EB%82%98/" rel="tag"># 세미나</a>
+              <a href="/tags/%EC%84%A4%EB%AA%85-%EA%B0%80%EB%8A%A5%ED%95%9C-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5/" rel="tag"># 설명 가능한 인공지능</a>
+              <a href="/tags/%EC%9D%98%EB%A3%8C-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5/" rel="tag"># 의료 인공지능</a>
+              <a href="/tags/Explainable-AI/" rel="tag"># Explainable AI</a>
+              <a href="/tags/Medical-AI/" rel="tag"># Medical AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/13/Adversarial-Latent-Autoencoders-md/" rel="prev" title="Adversarial Latent Autoencoders">
+                  <i class="fa fa-chevron-left"></i> Adversarial Latent Autoencoders
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mulkong</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
