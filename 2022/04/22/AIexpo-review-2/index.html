@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mulkong.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+
+  <meta name="description" content="이번 포스팅은 코엑스에서 개최된 2022 AI Expo에서 KAIST 김재철AI대학원 AI기술설명회 세미나 참석하고 간단하게 개인 의견을 포함하여 두서없이 정리한 내용입니다. ✔️ 설명 가능한 인공지능 동향✔️ 의료 인공지능의 동향✔️ 생성모델 기술 동향☐ Federated learning☐ 자기지도(self-supervised) 기반 비지도 학습 기">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AIexpo-review-2">
+<meta property="og:url" content="http://mulkong.github.io/2022/04/22/AIexpo-review-2/index.html">
+<meta property="og:site_name" content="Mulkong DeepLearning">
+<meta property="og:description" content="이번 포스팅은 코엑스에서 개최된 2022 AI Expo에서 KAIST 김재철AI대학원 AI기술설명회 세미나 참석하고 간단하게 개인 의견을 포함하여 두서없이 정리한 내용입니다. ✔️ 설명 가능한 인공지능 동향✔️ 의료 인공지능의 동향✔️ 생성모델 기술 동향☐ Federated learning☐ 자기지도(self-supervised) 기반 비지도 학습 기">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0008/figure0001.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0001.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0002.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0003.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0004.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0005.gif">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0006.gif">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0007.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0008.jpeg">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0009.gif">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0010.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0011.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0009/figure0012.png">
+<meta property="article:published_time" content="2022-04-22T10:53:58.000Z">
+<meta property="article:modified_time" content="2022-04-27T11:43:15.373Z">
+<meta property="article:author" content="mulkong">
+<meta property="article:tag" content="KAIST AI 대학원">
+<meta property="article:tag" content="세미나">
+<meta property="article:tag" content="설명 가능한 인공지능">
+<meta property="article:tag" content="의료 인공지능">
+<meta property="article:tag" content="Explainable AI">
+<meta property="article:tag" content="Medical AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mulkong.github.io/images/post_images/post0008/figure0001.png">
+
+
+<link rel="canonical" href="http://mulkong.github.io/2022/04/22/AIexpo-review-2/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ko'
+  };
+</script>
+
+  <title>AIexpo-review-2 | Mulkong DeepLearning</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Mulkong DeepLearning</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">딥러닝 정리 블로그</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>홈</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>태그</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>카테고리</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>아카이브</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          목차
+        </li>
+        <li class="sidebar-nav-overview">
+          흝어보기
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%EC%83%9D%EC%84%B1%EB%AA%A8%EB%8D%B8-%EA%B8%B0%EC%88%A0-%EB%8F%99%ED%96%A5"><span class="nav-number">1.</span> <span class="nav-text">생성모델 기술 동향</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B8%B0%EC%88%A0-%EB%8F%99%ED%96%A5"><span class="nav-number">1.1.</span> <span class="nav-text">기술 동향</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Style-Transfer"><span class="nav-number">1.1.1.</span> <span class="nav-text">Style Transfer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EA%B3%A0%ED%95%B4%EC%83%81%EB%8F%84-%EC%98%81%EC%83%81-%ED%95%A9%EC%84%B1-%EA%B8%B0%EC%88%A0-StyleGAN2"><span class="nav-number">1.1.2.</span> <span class="nav-text">고해상도 영상 합성 기술 (StyleGAN2)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CycleGAN"><span class="nav-number">1.1.3.</span> <span class="nav-text">CycleGAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StarGAN"><span class="nav-number">1.1.4.</span> <span class="nav-text">StarGAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deep-fake"><span class="nav-number">1.1.5.</span> <span class="nav-text">Deep fake</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%AA%A8%EC%85%98-%EC%A3%BC%EC%9E%85-%EB%B9%84%EB%94%94%EC%98%A4-%ED%95%A9%EC%84%B1-Everybody-dance-Now"><span class="nav-number">1.1.6.</span> <span class="nav-text">모션 주입 비디오 합성 (Everybody dance Now)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5-%EA%B8%B0%EB%B0%98-%EC%9E%90%EB%8F%99-%EC%B1%84%EC%83%89"><span class="nav-number">1.1.7.</span> <span class="nav-text">인공지능 기반 자동 채색</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Semantic-%EC%A0%95%EB%B3%B4%EB%A5%BC-%EB%B3%80%EA%B2%BD%EC%9D%B4-%EA%B0%80%EB%8A%A5%ED%95%9C-%EB%B0%A9%EB%B2%95"><span class="nav-number">1.1.8.</span> <span class="nav-text">Semantic 정보를 변경이 가능한 방법</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EC%8B%A4%EC%82%AC-%EC%98%81%EC%83%81-%ED%8E%B8%EC%A7%91"><span class="nav-number">1.1.9.</span> <span class="nav-text">실사 영상 편집</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EA%B0%80%EC%83%81%EC%9C%BC%EB%A1%9C-%EC%98%B7-%EA%B0%88%EC%95%84%EC%9E%85%EA%B8%B0"><span class="nav-number">1.1.10.</span> <span class="nav-text">가상으로 옷 갈아입기</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%EC%B0%A8%EC%9B%90-%EC%98%81%EC%83%81%EC%97%90%EC%84%9C-3%EC%B0%A8%EC%9B%90-%EC%98%81%EC%83%81%EC%9C%BC%EB%A1%9C-%EB%B3%B5%EC%9B%90"><span class="nav-number">1.1.11.</span> <span class="nav-text">2차원 영상에서 3차원 영상으로 복원</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Attention-%EA%B8%B0%EB%B0%98-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%BA%A1%EC%85%98-%EC%83%9D%EC%84%B1"><span class="nav-number">1.1.12.</span> <span class="nav-text">Attention 기반 이미지 캡션 생성</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%96%A5%ED%9B%84-%EC%97%B0%EA%B5%AC-%EB%B0%A9%ED%96%A5"><span class="nav-number">1.2.</span> <span class="nav-text">향후 연구 방향</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B8%B0%ED%83%80-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5-%EB%B6%84%EC%95%BC%EC%9D%98-%EC%B5%9C%EC%8B%A0-%EB%8F%99%ED%96%A5"><span class="nav-number">1.3.</span> <span class="nav-text">기타 인공지능 분야의 최신 동향</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">mulkong</p>
+  <div class="site-description" itemprop="description">공부한 내용을 바탕으로 정리한 기술블로그 입니다.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">포스트</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">카테고리</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">태그</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2022/04/22/AIexpo-review-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="mulkong">
+      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mulkong DeepLearning">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AIexpo-review-2
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">작성일</span>
+
+      <time title="Post created: 2022-04-22 19:53:58" itemprop="dateCreated datePublished" datetime="2022-04-22T19:53:58+09:00">2022-04-22</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Updated at: 2022-04-27 20:43:15" itemprop="dateModified" datetime="2022-04-27T20:43:15+09:00">2022-04-27</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%EC%84%B8%EB%AF%B8%EB%82%98/" itemprop="url" rel="index"><span itemprop="name">세미나</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <hr>
+<img src="/images/post_images/post0008/figure0001.png" width="100%" height="100%">
+
+<p>이번 포스팅은 코엑스에서 개최된 2022 AI Expo에서 KAIST 김재철AI대학원 AI기술설명회 세미나 참석하고 간단하게 개인 의견을 포함하여 두서없이 정리한 내용입니다.</p>
+<p>✔️ <del>설명 가능한 인공지능 동향</del><br>✔️ <del>의료 인공지능의 동향</del><br>✔️ 생성모델 기술 동향<br>☐ Federated learning<br>☐ 자기지도(self-supervised) 기반 비지도 학습 기술<br>☐ 가상인간 기술</p>
+<p>정리한 내용이 많아 글은 총 2편으로 나누어서 작성을 하겠습니다.</p>
+<hr>
+<a id="more"></a>
+
+</br>
+</br>
+
+<h1 id="생성모델-기술-동향"><a href="#생성모델-기술-동향" class="headerlink" title="생성모델 기술 동향"></a>생성모델 기술 동향</h1><p>생성 모델은 두가지 테스크로 구분해볼 수 있다.</p>
+<ul>
+<li>인식 테스크</li>
+<li>생성 및 변환 테스크<ul>
+<li>noise에서 어떤 이미지를 생성</li>
+<li>서로 다른 스타일 별로 이미지를 변환</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<h2 id="기술-동향"><a href="#기술-동향" class="headerlink" title="기술 동향"></a>기술 동향</h2><p>최근 생성모델을 이용한 기술은 이미지, 비디오와 더불어 텍스트 등의 2개 이상의 데이터를 함께 사용하는 Multimodal 모델을 대세(?)이다. 그 종류는 다음과 같다.</p>
+</blockquote>
+<ul>
+<li>이미지 캡션 생성</li>
+<li>텍스트 기반 이미지 합성 및 편집</li>
+<li>음성 기반 얼굴 이미지 합성</li>
+<li>벡터 표현형을 통한 이종 데이터의 통합 및 변환<br>  <em>ex) CLIP, DALL-E</em></li>
+</ul>
+</br>
+
+<h3 id="Style-Transfer"><a href="#Style-Transfer" class="headerlink" title="Style Transfer"></a>Style Transfer</h3><p><img src="/images/post_images/post0009/figure0001.png"> <center><em>출처: <a target="_blank" rel="noopener" href="https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf">Image Style Transfer Using Convolutional Neural Networks 논문</a></em></center></p>
+</br>
+
+<h3 id="고해상도-영상-합성-기술-StyleGAN2"><a href="#고해상도-영상-합성-기술-StyleGAN2" class="headerlink" title="고해상도 영상 합성 기술 (StyleGAN2)"></a>고해상도 영상 합성 기술 (StyleGAN2)</h3><p>고해상도 이미지를 생성할  수 있는 PGGAN부터 StyleGAN, StyleGAN2, StyleGAN2-ada, StyleGAN3, StyleGAN-XL 등 여러 논문들이 나와있다.</p>
+<p>아래는 제가 이전 회사에서 작성한 GAN 시리즈 중 일부인데 참고하면 좋을거 같습니다.<br>👀 <a target="_blank" rel="noopener" href="https://blog.promedius.ai/stylegan_1/"><strong>StyleGAN 1편</strong></a></p>
+<p>👀 <a target="_blank" rel="noopener" href="https://blog.promedius.ai/stylegan_2/"><strong>StyleGAN 2편</strong></a></p>
+<p><img src="/images/post_images/post0009/figure0002.png"> <center><em>출처: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1912.04958.pdf">StyleGAN2, Analyzing and Improving the Image Quality of StyleGAN 논문</a></em></center></p>
+</br>
+
+<h3 id="CycleGAN"><a href="#CycleGAN" class="headerlink" title="CycleGAN"></a>CycleGAN</h3><p>👀 <a target="_blank" rel="noopener" href="https://sensibilityit.tistory.com/516"><strong>CycleGAN 리뷰</strong></a></p>
+<p><img src="/images/post_images/post0009/figure0003.png"> <center><em>출처: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1703.10593.pdf">Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks 논문</a></em></center></p>
+</br>
+
+<h3 id="StarGAN"><a href="#StarGAN" class="headerlink" title="StarGAN"></a>StarGAN</h3><p>멀티 도메인 이미지 변환 기법이며 이미지 뿐만 아니라 비디오 상에서도 가능하다.<br><img src="/images/post_images/post0009/figure0004.png"> <center><em>출처: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.09020">StarGAN: Unified Generative Adversarial Networks for Multi-Domain Image-to-Image Translation 논문</a></em></center></p>
+</br>
+
+<h3 id="Deep-fake"><a href="#Deep-fake" class="headerlink" title="Deep fake"></a>Deep fake</h3><p>내가 변경 시키고 싶은 이미지 또는 영상에(target) 원하는 얼굴 이미지(source)를 입력으로 딥페이크 모델에 넣으면 원하는 얼굴이 합성된 상태로 결과가 나온다.<br>이 기술을 이용해서 Living portraits(움직이는 초상화)도 가능하다.</p>
+<p><img src="/images/post_images/post0009/figure0005.gif"> <center><em>출처: <a target="_blank" rel="noopener" href="https://www.boredpanda.com/animate-image-deepfakes-ai-samsung-moscow/?utm_source=google&utm_medium=organic&utm_campaign=organic">Few-Shot Adversarial learning of Realistic Neural Talking Head Models</a></em></center></p>
+</br>
+
+<h3 id="모션-주입-비디오-합성-Everybody-dance-Now"><a href="#모션-주입-비디오-합성-Everybody-dance-Now" class="headerlink" title="모션 주입 비디오 합성 (Everybody dance Now)"></a>모션 주입 비디오 합성 (Everybody dance Now)</h3><p>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_ICCV_2019/papers/Chan_Everybody_Dance_Now_ICCV_2019_paper.pdf"><strong>Everybody Dance Now</strong></a></p>
+<p><img src="/images/post_images/post0009/figure0006.gif"></p>
+</br>
+
+<h3 id="인공지능-기반-자동-채색"><a href="#인공지능-기반-자동-채색" class="headerlink" title="인공지능 기반 자동 채색"></a>인공지능 기반 자동 채색</h3><p><strong>자동 채색상의 엣지 블리딩 수정 기술</strong><br>여러 컴퓨터 비전에서 자동 채색 기술에 관한 연구가 이루어 지고 있다. 스케치만 입력으로 주면 딥러닝이 자동 채색을 해줄때 특정 부분을 사용자가 수정하고 싶은 경우가 생길 수 있게 된다. 또한 딥러닝이 자동 채색을 해주면 경계가 모호한 부분에는 색이 번지는 현상이 일어나게 된다. 이런 현상을 컬러, 엣지 블리딩이라고 한다.</p>
+<p>이런 경우 사람이 수정하고자 하는 영역에 경계선을 그리면 자동으로 수정이 가능하게 하는 방법이다.</p>
+<h3 id="Semantic-정보를-변경이-가능한-방법"><a href="#Semantic-정보를-변경이-가능한-방법" class="headerlink" title="Semantic 정보를 변경이 가능한 방법"></a>Semantic 정보를 변경이 가능한 방법</h3><p>다양한 Semantic information (무표정에서 웃는 표정, 남성에서 여성으로)를 변환하고 싶을 때 변경되는 영상 편집 방법이다.</p>
+<p>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2007.06600.pdf"><strong>Closed-Form Factorization of Latent Semantics in GANs</strong></a></p>
+<p><img src="/images/post_images/post0009/figure0007.png"> <center><em>출처: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2007.06600.pdf">Closed-Form Factorization of Latent Semantics in GANs</a></em></center></p>
+</br>
+
+<h3 id="실사-영상-편집"><a href="#실사-영상-편집" class="headerlink" title="실사 영상 편집"></a>실사 영상 편집</h3><p>여름 이미지를 넣으면 겨울일때, 봄일때 다양한 계졀로 swapping 할 수 있는 기술<br>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2007.00653.pdf"><strong>Swapping Autoencoder for Deep Image Manipulation</strong></a></p>
+<p><img src="/images/post_images/post0009/figure0008.jpeg"></p>
+<p><img src="/images/post_images/post0009/figure0009.gif"></p>
+</br>
+
+<h3 id="가상으로-옷-갈아입기"><a href="#가상으로-옷-갈아입기" class="headerlink" title="가상으로 옷 갈아입기"></a>가상으로 옷 갈아입기</h3><p><img src="/images/post_images/post0009/figure0010.png"></p>
+<p>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1711.08447.pdf"><strong>Swapping Autoencoder for Deep Image Manipulation</strong></a></p>
+<p>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2103.16874.pdf"><strong>VITON-HD: High-Resolution Virtual Try-On via Misalignment-Aware Normalization</strong></a></p>
+</br>
+
+<h3 id="2차원-영상에서-3차원-영상으로-복원"><a href="#2차원-영상에서-3차원-영상으로-복원" class="headerlink" title="2차원 영상에서 3차원 영상으로 복원"></a>2차원 영상에서 3차원 영상으로 복원</h3><p>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://shunsukesaito.github.io/PIFuHD/"><strong>PIFuHD: Multi-Level Pixel-Aligned Implicit Function for High-Resolution 3D Human Digitization, CVPR20</strong></a></p>
+<p><img src="/images/post_images/post0009/figure0011.png"></p>
+</br>
+
+<h3 id="Attention-기반-이미지-캡션-생성"><a href="#Attention-기반-이미지-캡션-생성" class="headerlink" title="Attention 기반 이미지 캡션 생성"></a>Attention 기반 이미지 캡션 생성</h3><ul>
+<li>주어진 이미지가 있을 때 텍스트 이미지를 설명하는 문장을 생성하는 분야.</li>
+</ul>
+<p>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1612.01887v2.pdf"><strong>Knowing When to Look: Adaptive Attention via A Visual Sentinel for Image Captioning</strong></a></p>
+<p>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1411.4555.pdf"><strong>Show and Tell: A Neural Image Caption Generator</strong></a></p>
+<p><img src="/images/post_images/post0009/figure0012.png"></p>
+<p>이 이외에도 문장 입력을 통한 자동 채색, Text-to-Image Generation(DALL-E, DALLE-2), 텍스트 기반 이미지 편집(Style CLIP) 등의 연구들이 존재한다.</p>
+</br>
+</br>
+
+
+<h2 id="향후-연구-방향"><a href="#향후-연구-방향" class="headerlink" title="향후 연구 방향"></a>향후 연구 방향</h2><ul>
+<li>Support for real-time, multiple interactive interactions<ul>
+<li>Reflecting higher-order user intent in multiple sequential interactions</li>
+</ul>
+</li>
+<li>Revealing inner-workings and interaction handle<ul>
+<li>E.G., explicitly using (interpretation-friendly) attention module</li>
+</ul>
+</li>
+<li>Better simulating user inputs in the training stage</li>
+<li>Incorporating data visualization and advanced user interfaces</li>
+<li>Leveraging hard rule-based approaches</li>
+<li>Incorporating users’ implicit feedback and online learning</li>
+</ul>
+</br>
+
+
+<h2 id="기타-인공지능-분야의-최신-동향"><a href="#기타-인공지능-분야의-최신-동향" class="headerlink" title="기타 인공지능 분야의 최신 동향"></a>기타 인공지능 분야의 최신 동향</h2><ul>
+<li>초거대 AI 모델<br>  더 많은 데이터 + 더 큰 딥러닝 모델 + 더 많은 GPU 리소스</li>
+<li>실제 활용될 때의 이슈 대두 및 보완책<ul>
+<li>인간과 인공지ㄴㅇ 간의 소통 (인공지능 판단의 근거 제시, 사용자 피드백 수용)</li>
+<li>인공지능 모델의 취약점 및 보안 관련 문제</li>
+</ul>
+</li>
+<li>MLOps<ul>
+<li>머신러닝 모델을 서비스에 적용하는 전체 파이프라인을 다룸</li>
+<li>실제로 딥러닝 모델을 프로그램으로 짜고, 그 모델을 학습해서 성능을 높이는 과정은 전체 과정 중 작은 일부만을 차지함.</li>
+<li>그 보다는 학습 데이터의 확보 및 정제, 라벨링, hyperparameter tunning, 딥러닝 하드웨어 구성, 모델 개인화 및 경량화, 새로운 데이터에 대한 active learning 기반의 추가 학습 등의 다양한 다른 과정이 훨씬 더 중요해짐.</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/KAIST-AI-%EB%8C%80%ED%95%99%EC%9B%90/" rel="tag"># KAIST AI 대학원</a>
+              <a href="/tags/%EC%84%B8%EB%AF%B8%EB%82%98/" rel="tag"># 세미나</a>
+              <a href="/tags/%EC%84%A4%EB%AA%85-%EA%B0%80%EB%8A%A5%ED%95%9C-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5/" rel="tag"># 설명 가능한 인공지능</a>
+              <a href="/tags/%EC%9D%98%EB%A3%8C-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5/" rel="tag"># 의료 인공지능</a>
+              <a href="/tags/Explainable-AI/" rel="tag"># Explainable AI</a>
+              <a href="/tags/Medical-AI/" rel="tag"># Medical AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/21/AIexpo-review-1/" rel="prev" title="KAIST 김재철AI대학원 AI설명회 정리-1">
+                  <i class="fa fa-chevron-left"></i> KAIST 김재철AI대학원 AI설명회 정리-1
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mulkong</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
