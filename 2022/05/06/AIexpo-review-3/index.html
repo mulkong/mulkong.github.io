@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mulkong.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+
+  <meta name="description" content="이번 포스팅은 코엑스에서 개최된 2022 AI Expo에서 KAIST 김재철AI대학원 AI기술설명회 세미나 참석하고 간단하게 개인 의견을 포함하여 두서없이 정리한 내용입니다. ✔️ 설명 가능한 인공지능 동향✔️ 의료 인공지능의 동향✔️ 생성모델 기술 동향✔️ Federated learning✔️ 자기지도(self-supervised) 기반 비지도 학습">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KAIST 김재철AI대학원 AI설명회 정리-3">
+<meta property="og:url" content="http://mulkong.github.io/2022/05/06/AIexpo-review-3/index.html">
+<meta property="og:site_name" content="Mulkong DeepLearning">
+<meta property="og:description" content="이번 포스팅은 코엑스에서 개최된 2022 AI Expo에서 KAIST 김재철AI대학원 AI기술설명회 세미나 참석하고 간단하게 개인 의견을 포함하여 두서없이 정리한 내용입니다. ✔️ 설명 가능한 인공지능 동향✔️ 의료 인공지능의 동향✔️ 생성모델 기술 동향✔️ Federated learning✔️ 자기지도(self-supervised) 기반 비지도 학습">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0008/figure0001.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0010/figure0006.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0010/figure0007.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0010/figure0001.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0010/figure0002.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0010/figure0003.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0010/figure0003.png">
+<meta property="og:image" content="http://mulkong.github.io/images/post_images/post0010/figure0004.png">
+<meta property="article:published_time" content="2022-05-06T07:15:54.000Z">
+<meta property="article:modified_time" content="2022-05-14T09:11:23.988Z">
+<meta property="article:author" content="mulkong">
+<meta property="article:tag" content="KAIST AI 대학원">
+<meta property="article:tag" content="세미나">
+<meta property="article:tag" content="설명 가능한 인공지능">
+<meta property="article:tag" content="의료 인공지능">
+<meta property="article:tag" content="Explainable AI">
+<meta property="article:tag" content="Medical AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mulkong.github.io/images/post_images/post0008/figure0001.png">
+
+
+<link rel="canonical" href="http://mulkong.github.io/2022/05/06/AIexpo-review-3/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ko'
+  };
+</script>
+
+  <title>KAIST 김재철AI대학원 AI설명회 정리-3 | Mulkong DeepLearning</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Mulkong DeepLearning</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">딥러닝 정리 블로그</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>홈</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>태그</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>카테고리</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>아카이브</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          목차
+        </li>
+        <li class="sidebar-nav-overview">
+          흝어보기
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Federated-Learning"><span class="nav-number">1.</span> <span class="nav-text">Federated Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Data-Heterogeneity-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9D%B4%EC%A7%88%EC%84%B1"><span class="nav-number">1.1.</span> <span class="nav-text">Data Heterogeneity (데이터 이질성)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FedBABU"><span class="nav-number">1.2.</span> <span class="nav-text">FedBABU</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EA%B5%AC%EC%97%AD%EC%9D%84-%EB%82%98%EB%88%84%EC%97%88%EC%9D%84-%EB%95%8C-%EC%9E%A5%EC%A0%90"><span class="nav-number">1.2.1.</span> <span class="nav-text">구역을 나누었을 때 장점</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%EC%9E%90%EA%B8%B0%EC%A7%80%EB%8F%84-self-supervised-%EA%B8%B0%EB%B0%98-%EB%B9%84%EC%A7%80%EB%8F%84-%ED%95%99%EC%8A%B5-%EA%B8%B0%EC%88%A0"><span class="nav-number">2.</span> <span class="nav-text">자기지도(self-supervised) 기반 비지도 학습 기술</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%94%A5%EB%9F%AC%EB%8B%9D-%ED%95%99%EC%8A%B5%ED%95%A0-%EB%8C%80-%EB%B3%84%EB%A1%9C%EC%9D%98-%EB%9D%BC%EB%B2%A8-label-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%95%84%EC%9A%94"><span class="nav-number">2.0.1.</span> <span class="nav-text">딥러닝 학습할 대 별로의 라벨(label) 데이터 필요</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%A0%88%EC%9D%B4%EB%B8%94%EC%9D%B4-%EC%97%86%EB%8A%94-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%88%98%EC%A7%91%EC%9D%80-%EC%89%BD%EB%8B%A4"><span class="nav-number">2.0.2.</span> <span class="nav-text">레이블이 없는 데이터 수집은 쉽다</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-supervised-%ED%95%99%EC%8A%B5-%EB%B0%A9%EB%B2%95"><span class="nav-number">2.1.</span> <span class="nav-text">self-supervised 학습 방법</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%AC%B8%EC%A0%9C%EC%A0%90-1"><span class="nav-number">2.1.1.</span> <span class="nav-text">문제점 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%95%B4%EA%B2%B0%EC%B1%85-1"><span class="nav-number">2.1.2.</span> <span class="nav-text">해결책 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%AC%B8%EC%A0%9C%EC%A0%90-2"><span class="nav-number">2.1.3.</span> <span class="nav-text">문제점 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%95%B4%EA%B2%B0%EC%B1%85-2"><span class="nav-number">2.1.4.</span> <span class="nav-text">해결책 2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%EA%B0%80%EC%83%81%EC%9D%B8%EA%B0%84-%EA%B8%B0%EC%88%A0"><span class="nav-number">3.</span> <span class="nav-text">가상인간 기술</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">mulkong</p>
+  <div class="site-description" itemprop="description">공부한 내용을 바탕으로 정리한 기술블로그 입니다.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">포스트</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">카테고리</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">태그</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2022/05/06/AIexpo-review-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="mulkong">
+      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mulkong DeepLearning">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          KAIST 김재철AI대학원 AI설명회 정리-3
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">작성일</span>
+
+      <time title="Post created: 2022-05-06 16:15:54" itemprop="dateCreated datePublished" datetime="2022-05-06T16:15:54+09:00">2022-05-06</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Updated at: 2022-05-14 18:11:23" itemprop="dateModified" datetime="2022-05-14T18:11:23+09:00">2022-05-14</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%EC%84%B8%EB%AF%B8%EB%82%98/" itemprop="url" rel="index"><span itemprop="name">세미나</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <hr>
+<img src="/images/post_images/post0008/figure0001.png" width="100%" height="100%">
+
+<p>이번 포스팅은 코엑스에서 개최된 2022 AI Expo에서 KAIST 김재철AI대학원 AI기술설명회 세미나 참석하고 간단하게 개인 의견을 포함하여 두서없이 정리한 내용입니다.</p>
+<p>✔️ <del>설명 가능한 인공지능 동향</del><br>✔️ <del>의료 인공지능의 동향</del><br>✔️ <del>생성모델 기술 동향</del><br>✔️ Federated learning<br>✔️ 자기지도(self-supervised) 기반 비지도 학습 기술<br>✔️ 가상인간 기술</p>
+<p>정리한 내용이 많아 글은 총 3편으로 나누어서 작성하겠습니다.</p>
+<hr>
+<a id="more"></a>
+
+</br>
+</br>
+
+<h1 id="Federated-Learning"><a href="#Federated-Learning" class="headerlink" title="Federated Learning"></a>Federated Learning</h1><p>Federated Learning(연합 학습)은 서로 다른 환경을 지닌 다수의 디바이스들이 협력하여 하나의 네트워크를 학습하거나 또는 개개인의 성능을 높이는 학습 방법입니다. 이해가 쉽도록 하나의 예시를 들어보겠습니다. </p>
+<p>‘A’라는 병원의 데이터로 AI 모델을 학습해서 좋은 성능을 이끌어 냈습니다. 이 모델을 이용해서 ‘B’라는 병원, 혹은 해외의 ‘C’병원에서도 제대로 동작하고 비슷한 성능이 나올 수 있도록 인공지능 모델을 학습하고 싶은 경우가 있습니다. 이런 경우 흔히 생각해볼 수 있는 내용은 <code>&#39;A&#39;데이터를 이용해서 학습한 모델을 fine-tunning을 시키면 되는게 아닌가?</code> 라는 생각을 할 수 있습니다. 이렇게 할 경우 ‘A’데이터 특성을 잃어버리게 되어 옳지 못한 방법이고 오히려 성능이 더 저하될 수 있습니다. 따라서 이런 경우에는 Federated Learning 학습 방법을 이용해서 아래 그림과 같이 여러 디바이스(병원, 스마트폰 등)에서 네트워크를 학습하고 설계를 해야합니다. </p>
+<p><img src="/images/post_images/post0010/figure0006.png"> <center><em>출처: <a target="_blank" rel="noopener" href="https://ai.googleblog.com/2017/04/federated-learning-collaborative.html">Google AI Blog</a></em></center></p>
+<p>👉 더 자세한 내용: <a target="_blank" rel="noopener" href="https://medium.com/curg/%EC%97%B0%ED%95%A9-%ED%95%99%EC%8A%B5-federated-learning-%EA%B7%B8%EB%A6%AC%EA%B3%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-b5c481bd94b7">연합 학습(Federated Learning), 그리고 챌린지</a></p>
+</br>
+
+<blockquote>
+<h2 id="Data-Heterogeneity-데이터-이질성"><a href="#Data-Heterogeneity-데이터-이질성" class="headerlink" title="Data Heterogeneity (데이터 이질성)"></a>Data Heterogeneity (데이터 이질성)</h2></blockquote>
+<p>여러 디바이스들이 협력하여 하나의 네트워크를 학습하기 위해서는 각 디바이스마다 다른 형태와 특성을 지닌 데이터들로 학습해야합니다. 또한 스마트폰 같은 경우 민강한 데이터 정보가 있는 경우가 많아 privacy 문제도 고려해가며 학습을 해야하는 경우가 있습니다. 이런 특성을 <strong>Data Heterogeneity</strong> 라고 합니다. <code>Data Heterogeneity 특성을 잘 이용해서 스마트 디바이스들마다 local update를 하면 오히려 더 좋은 성능을 얻을 수 있습니다.</code> 이 과정은 좀 더 <code>specific한 decision</code>을 내보내면서 더 좋은 성능을 얻게 됩니다.</p>
+<p>KAIST에서는 Global model로 수렴을 시킬 때 좋은 방법과  Data Heterogeneity특성을 최대한 이용해서 성능이 좋아질 수 있는 방법에 대한 연구를 진행하고 그 내용을 소개해주었습니다. 이 내용으로 접근해서 연구한 방법으로는 <code>전체적으로 업데이트를 시키지 않고 구역을 나누어 특정 부분의 layer만 업데이트</code>하는 방법 입니다. Neural network는 여러개의 layer로 이루어진 선형모델 입니다. 이를 깊게 쌓을수록 많은 연상량과 파라메터 갯수가 많아지고 우리는 이를 딥러닝 모델이라고 부릅니다. 이런 딥러닝 모델을 학습할때는 global 하게 모든 layer를 동시에 업데이트 하게 됩니다. 이런 방법은 전혀 다른 데이터가 들어올 때 좋은 성능을 얻을 수 없게 됩니다. 하지만 네트워크 구역을 나누어서 특정 부분의 layer만 업데이트하여 학습을 진행하는 방법이 <strong>FedBABU</strong>라는 논문의 방법이며 이에 대한 내용은 아래에서 알아보도록 하겠습니다.</p>
+</br>
+
+<blockquote>
+<h2 id="FedBABU"><a href="#FedBABU" class="headerlink" title="FedBABU"></a>FedBABU</h2></blockquote>
+<p>📄<strong>paper</strong>: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2106.06042"><strong>FedBABU: Towards Enhanced Representation for Federated Image Classification</strong></a></p>
+<p>Federated Learning은 모든 사용자에게 적절하게 작동하는 모델과 각 개인에게 미리 맞춤화된 모델 두가지 방향성을 지니고 있습니다. 하지만 Google에서 발표한 <a target="_blank" rel="noopener" href="https://proceedings.mlr.press/v54/mcmahan17a.html"><strong>FedAvg: Federated Averaging</strong></a>에서 <code>global하게 잘 되는 모델은 local device에서는 더이상 성능 향상이 어렵다</code>는 문제가 발생하게 됩니다. 그 이유는 <code>classifier를 각자 다르게 학습해서 문제가 발생</code>하는 것 입니다. 그래서 FedBABU 논문에서 제안하는 방법은 <code>classifier는 update 안되도록 고정시키고 random weight를 지내도록 설정을 한 후 classifier를 제외한 나머지 부분만 weight update 되도록 학습</code>합니다. 이 방법은 각 사용자마다 classifier 전까지만 학습시켜 실제적으로 representation만 바꾸게 됩니다. 이와 비슷한 연구로 Representation learning 연구 분야로 ICLR 2021에서 소개된 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2008.08882"><strong>BOIL</strong></a>논문이 있습니다. 이 논문은 FedBABU와는 다르게 <code>outer loop에서 classifier는 update</code>를 하지만 FedBABU에서는 거의 고정된다는 부분이 다릅니다. </p>
+<h3 id="구역을-나누었을-때-장점"><a href="#구역을-나누었을-때-장점" class="headerlink" title="구역을 나누었을 때 장점"></a>구역을 나누었을 때 장점</h3><p>classifier는 고정하고 나머지 부분만 update하는 경우의 장점은 사용자들이 서로 다른 data구성을 가지는 상황에서 representation을 학습하는 것이 제각각이 될 위험이 있는데 FedBABU에서 제안한 방법대로 classifier는 random하게 두고 나머지 부분만 update되도록 학습하면 고정된 기준점을 가지고 학습하는 것이기 때문에 좀 더 효과적으로 학습할 수 있게 됩니다.</p>
+<p>이런 식으로 구역을 나누어서, global, local로 업데이트를 따로 진행을 하다 보면 Federated learning 차원에서 좋은 성능을 얻을 수 있습니다. 또한 <strong>Knowledge Distillation</strong>를 잘 활용하면 더 좋은 성능을 얻을 수 있다고도 설명을 해주셨습니다.</p>
+</br>
+
+<p><img src="/images/post_images/post0010/figure0007.png"> <center></center></p>
+</br>
+</br>
+
+<hr>
+<h1 id="자기지도-self-supervised-기반-비지도-학습-기술"><a href="#자기지도-self-supervised-기반-비지도-학습-기술" class="headerlink" title="자기지도(self-supervised) 기반 비지도 학습 기술"></a>자기지도(self-supervised) 기반 비지도 학습 기술</h1><p>self-supervised learning이 활용되는 이유는 딥러닝 모델 학습 과정 중 아래와 같은 문제점들을 해결하기 위한 방법입니다.</p>
+<h3 id="딥러닝-학습할-대-별로의-라벨-label-데이터-필요"><a href="#딥러닝-학습할-대-별로의-라벨-label-데이터-필요" class="headerlink" title="딥러닝 학습할 대 별로의 라벨(label) 데이터 필요"></a>딥러닝 학습할 대 별로의 라벨(label) 데이터 필요</h3><p>지도 학습(supervised learning)으로 학습할 때 학습 데이터와 라벨 데이터가 필요합니다. 이를 위해선 라벨링 과정이 필수적으로 필요하지만 이런 과정은 많은 시간과 비용이 들게 되며 특히 전문성을 요구하는 도메인의 데이터들은 더더욱 많은 제약조건이 요구됩니다.</p>
+<h3 id="레이블이-없는-데이터-수집은-쉽다"><a href="#레이블이-없는-데이터-수집은-쉽다" class="headerlink" title="레이블이 없는 데이터 수집은 쉽다"></a>레이블이 없는 데이터 수집은 쉽다</h3><p>레이블이 필요 없는 데이터는 그냥 데이터 수집만 하면 되니까 비교적 시간과 비용이 덜 들게 됩니다.</p>
+<p>위 두가지 문제점을 볼 때 비지도 학습 방법론의 중요성과 필요성을 볼 수 있으며 그 중에 self-supervised learning에 대한 연구 방법론을 설명해주셨습니다.</p>
+</br>
+
+<blockquote>
+<h2 id="self-supervised-학습-방법"><a href="#self-supervised-학습-방법" class="headerlink" title="self-supervised 학습 방법"></a>self-supervised 학습 방법</h2></blockquote>
+<p>정답 라벨(lable) 없이 입력 데이터만 이용하여 모델 학습하는 방법으로 입력 데이터만을 이용해서 라벨을 생성합니다. 이는 사람이 직접 라벨링(labeling, annotation) 작업을 하지 않고도 모델을 잘 학습할 수 있다는 장점이 있습니다. 이렇게 학습한 모델을 이용해서 <code>fine-tunning하여 downstream task에 이용하면 효과적</code>입니다. 최근 self-supervised learning 방법론들은 fine-tunning된 data augmentation 방법을 주로 사용하지만 이때 몇가지 문제점이 발생하며 문제점과 그에 대한 해결책을 소개해보겠습니다.</p>
+<h3 id="문제점-1"><a href="#문제점-1" class="headerlink" title="문제점 1"></a>문제점 1</h3><p>data augmentation 기법 조정을 위해서는 각 도메인 데이터의 사전 지식이 필요합니다. 이 말은 Domain A에서 ‘a’ data augmentation 방법이 효과적이라고 하면 ‘a’ 방법을 Domain B에 적용을 하게 될 경우 효과적이라고 보장을 할 수 없습니다. 오히려 augmentation 적용 안할때 보다 더 성능이 나빠질 수 있게됩니다.</p>
+<p>좀 더 사실적인 예를 들어보면, Chest X-ray 영상 데이터를 이용해 이미지 분류 문제를 풀기 위해 인공지능 모델을 학습한다고 가정을 해보겠습니다. 영상의학과 의사들이 판독할 때 절때 Flip을 해서 판독하지 않습니다. 모델 학습과정에서 data augmentation 중 flip을 넣어서 학습을 해보면 성능이 오히려 덜 나올 가능성이 높습니다.</p>
+<h3 id="해결책-1"><a href="#해결책-1" class="headerlink" title="해결책 1"></a>해결책 1</h3><p>위 문제점의 해결책으로는 Mixup을 활용한 Contrastive Learning 방법이 있습니다. 이 방법의 특징은 <code>도메인 특수성에 상관 없이 활용이 가능</code>하며 <code>다양한 도메인에서 도메인 관련 지식 없이도 높은 성능을 기록</code>한것을 볼 수 있습니다.</p>
+</br>
+
+<p><img src="/images/post_images/post0010/figure0001.png"> <center></center></p>
+</br>
+
+
+
+<h3 id="문제점-2"><a href="#문제점-2" class="headerlink" title="문제점 2"></a>문제점 2</h3><p>우리가 프레임워크를 이용해서 코드를 작성하고 모델을 학습할 때 여러 종류의 data augmentation을 사용해서 모델 학습을 진행합니다. 이때 어떤 data augmentation을 사용하느냐에 따라 downstream task의 성능에 영향을 미치게 됩니다.</p>
+<h3 id="해결책-2"><a href="#해결책-2" class="headerlink" title="해결책 2"></a>해결책 2</h3><p>Data Augmentation을 기반으로 한 self-supervised prediction을 통한 Transfer Learning을 개선하는 연구가 진행되었습니다. 이 연구는 NeurIPS 2021에서 소개된 <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2111.09613.pdf"><strong>Improving Transferability of Representations via Augmentation-Aware Self-Supervision</strong></a> 논문으로 정보 손실을 막기 위해 <code>어떻게 데이터가 증강되었는지 예측</code>하는 논문입니다.</p>
+<p><img src="/images/post_images/post0010/figure0002.png"> <center><em>출처: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2111.09613.pdf">Improving Transferability of Representations via Augmentation-Aware Self-Supervision</a></em></center></p>
+</br>
+
+<p>이 방법은 아래 표에서 보이는바와 같이 다양한 어플리케이션으로 전이 학습(Transfer Learning)에서 매우 효과적인것을 볼 수 있습니다.</p>
+<p><img src="/images/post_images/post0010/figure0003.png"> <center></center></p>
+</br>
+</br>
+
+
+<hr>
+<h1 id="가상인간-기술"><a href="#가상인간-기술" class="headerlink" title="가상인간 기술"></a>가상인간 기술</h1><p>이번 세미나에서 가상인간 기술은 우리가 흔하게 알고 있는 source video에 target image를 입력하면 target image로 얼굴이 변경되는 Deep Fake 기술, 가상 영상에 가상 음성을 적용해서 AI 아나운서 같은 음성 합성 기술을 소개했습니다. 이번 발표는 다른 발표와는 다르게 프로젝트 결과물 위주로 소개해주셨습니다. 발표해주신 교수님께서 말씀해주신 것 중 기억에 남는 논문이 있는데. 그것은 <strong>StyleSpeech 논문</strong>으로 메타학습 기반 음성합성 기술로 ICML 2021에 억셉된 논문입니다.</p>
+<p>기존 음성 합성 기술들은 GAN과 마찬가지로 많은 양의 데이터로 학습한 모델을 fine-tunning을 하는 경우가 많습니다. 하지만 StyleSpeech 논문은 StyleGAN의 AdaIN의 방법을 응용한 SALN(Style-Adaptive Layer Normalization)방법을 사용하여 새로운 사람의 목소리 스타일을 효율적으로 합성한 논문입니다. </p>
+<p><img src="/images/post_images/post0010/figure0003.png"> <center><em>SLAN을 적용한 StyleSpeech 구조</em></center></p>
+<p>또한 메타 러닝(meta-learning)을 접목시킨 Meta-StyleSpeech로 확정하여 아주 적은 양의 데이터로 새로운 사람의 목소리를 적용 가능하도록 하는 모델을 소개하고 있습니다. </p>
+<p><img src="/images/post_images/post0010/figure0004.png"> <center><em>Mera-StyleSpeech 전체 구조</em></center></p>
+<p>이 논문을 살표보니 개인적인 생각이지만 영상 합성 분야와 음성 합성 분야가 같은 방향성을 지니고 서로 좋은 특징들을 잘 응용하여 기술이 발전해나가는 것 같은 느낌을 받았습니다.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/KAIST-AI-%EB%8C%80%ED%95%99%EC%9B%90/" rel="tag"># KAIST AI 대학원</a>
+              <a href="/tags/%EC%84%B8%EB%AF%B8%EB%82%98/" rel="tag"># 세미나</a>
+              <a href="/tags/%EC%84%A4%EB%AA%85-%EA%B0%80%EB%8A%A5%ED%95%9C-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5/" rel="tag"># 설명 가능한 인공지능</a>
+              <a href="/tags/%EC%9D%98%EB%A3%8C-%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5/" rel="tag"># 의료 인공지능</a>
+              <a href="/tags/Explainable-AI/" rel="tag"># Explainable AI</a>
+              <a href="/tags/Medical-AI/" rel="tag"># Medical AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/22/AIexpo-review-2/" rel="prev" title="KAIST 김재철AI대학원 AI설명회 정리-2">
+                  <i class="fa fa-chevron-left"></i> KAIST 김재철AI대학원 AI설명회 정리-2
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mulkong</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
