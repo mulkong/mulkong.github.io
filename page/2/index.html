@@ -193,18 +193,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">포스트</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">카테고리</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">태그</span>
       </div>
   </nav>
@@ -235,6 +235,104 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="ko">
+    <link itemprop="mainEntityOfPage" href="http://mulkong.github.io/2021/12/25/Efficient-Anomaly-Detection-Method-Using-GAN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="mulkong">
+      <meta itemprop="description" content="공부한 내용을 바탕으로 정리한 기술블로그 입니다.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mulkong DeepLearning">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/25/Efficient-Anomaly-Detection-Method-Using-GAN/" class="post-title-link" itemprop="url">GAN을 이용한 효율적인 Anomaly Detection 방법 [f-AnoGAN vs MemAE]</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">작성일</span>
+
+      <time title="Post created: 2021-12-25 13:18:02" itemprop="dateCreated datePublished" datetime="2021-12-25T13:18:02+09:00">2021-12-25</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Updated at: 2023-03-11 16:07:29" itemprop="dateModified" datetime="2023-03-11T16:07:29+09:00">2023-03-11</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%EC%83%9D%EC%84%B1%EB%AA%A8%EB%8D%B8/" itemprop="url" rel="index"><span itemprop="name">생성모델</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <hr>
+<ul>
+<li>이번 포스팅은 티스토리에서 깃블로그로 이사 후 티스토리에 정리했던 내용에서 내용을 추가해서 작성한 글 입니다. 이전 글은 <a target="_blank" rel="noopener" href="https://sensibilityit.tistory.com/518">Tistory</a>에서 보실 수 있습니다.</li>
+</ul>
+<hr>
+<p>Unsupervised Learning 방법으로 GAN을 이용한 Anomaly Detection 방법 중 Encoder 부분을 이용한 f-AnoGAN 방법이 있습니다. 이 방법은 효율적으로 Anomaly Detection을 잘 하지만 미세한 결함을 제대로 검출하기 힘들다는 한계점이 있습니다. 본 글에서는 f-AnoGAN의 특징들과 단점에 대해 간략히 소개를 하고 그 해결책에 대한 내용을 간략하게 정리해보기 위한 글 입니다.</p>
+<p>비교를 할 논문은 아래와 같습니다.</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S1361841518302640">f-AnoGAN:Fast unsupervised anomaly detection with generative adversarial networks</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1904.02639">MemAE:Memorizing Normality to Detect Anomaly: Memory-augmented Deep Autoencoder for Unsupervised Anomaly Detection</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/25/Efficient-Anomaly-Detection-Method-Using-GAN/#more" rel="contents">
+                더 읽어보기 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -275,7 +373,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Updated at: 2022-12-26 17:52:25" itemprop="dateModified" datetime="2022-12-26T17:52:25+09:00">2022-12-26</time>
+        <time title="Updated at: 2023-03-11 16:07:46" itemprop="dateModified" datetime="2023-03-11T16:07:46+09:00">2023-03-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -283,7 +381,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
+          <a href="/categories/%EC%83%9D%EC%84%B1%EB%AA%A8%EB%8D%B8/" itemprop="url" rel="index"><span itemprop="name">생성모델</span></a>
         </span>
     </span>
 
@@ -369,7 +467,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Updated at: 2022-04-17 19:08:55" itemprop="dateModified" datetime="2022-04-17T19:08:55+09:00">2022-04-17</time>
+        <time title="Updated at: 2023-03-11 16:07:33" itemprop="dateModified" datetime="2023-03-11T16:07:33+09:00">2023-03-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -377,7 +475,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
+          <a href="/categories/%EC%83%9D%EC%84%B1%EB%AA%A8%EB%8D%B8/" itemprop="url" rel="index"><span itemprop="name">생성모델</span></a>
         </span>
     </span>
 
@@ -463,7 +561,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Updated at: 2022-04-17 19:09:33" itemprop="dateModified" datetime="2022-04-17T19:09:33+09:00">2022-04-17</time>
+        <time title="Updated at: 2023-03-11 16:07:49" itemprop="dateModified" datetime="2023-03-11T16:07:49+09:00">2023-03-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -471,7 +569,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
+          <a href="/categories/%EC%83%9D%EC%84%B1%EB%AA%A8%EB%8D%B8/" itemprop="url" rel="index"><span itemprop="name">생성모델</span></a>
         </span>
     </span>
 
